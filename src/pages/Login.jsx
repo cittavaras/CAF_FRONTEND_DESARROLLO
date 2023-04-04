@@ -16,28 +16,40 @@ const Login = () => {
     setContraseña(e.target.value);
   }
 
+  const validarCorreoElectronico = (correo) => {
+    const expresionRegular = /^[a-zA-Z0-9._%+-]+@(duocuc\.cl|duoc\.profesor\.cl)$/;
+    return expresionRegular.test(correo);
+  }
+
   const validacion = async (e) => {
     e.preventDefault();
-    const res = await axios.get('https://gym.ivaras.cl/api/alumnos');
+
+     if (!alumno || !contraseña) {  
+      alert('Debe ingresar todos los campos');
+      return;
+    }
+    else if (validarCorreoElectronico(alumno)  !== true) {
+      alert('El correo debe ser de duoc');
+      return;
+    }
+    else {
+      const res = await axios.post(`https://gym.ivaras.cl/api/alumnos/login`, {correo: alumno, password: contraseña});
+      console.log(res);
       try {
-        console.log(res);
-        const usuario = res.data.alumnos.find(element => element.correo === alumno.trim() && element.password === contraseña ); 
-        if (usuario && usuario.active === true) {
+        const usuario = res?.data?.respAlumno
+        if (!!usuario) {
           if (usuario.tipoUsuario === 'Admin') {
             alert('Bienvenido administrador');
-            window.location.href = "/admin";  
+            window.location.href = "/admin";
           }
           else if (usuario.tipoUsuario === 'Alumno') {
-            alert('Bienvenido alumno'); 
-            window.location.href = "/landing";  
-          } 
-          else  {
+            alert('Bienvenido alumno');
+            window.location.href = "/landing";
+          }
+          else {
 
             alert('Bienvenido Instructor');
           }
-        }
-        else if (usuario && usuario.active === false)  {
-          alert('Su cuenta aun se  encuentra desactivada')
         }
         else {
           alert('El usuario o contraseña es incorrecto')
@@ -47,20 +59,21 @@ const Login = () => {
         console.log(error);
         alert('Ocurrió un error al iniciar sesión')
       }
-    ;
+      ;
+    }
   }
 
   return (
     <>
-    <Wrapper>
-      <Form className='form-horizontal  d-flex  flex-column '>
-        <Title>INICIAR SESIÓN</Title>
-        <Input type="text" placeholder="CORREO DUOC:" value={alumno} onChange={onChangeCorreo} />
-        <Input type="password" placeholder="CONTRASEÑA:" value={contraseña} onChange={onChangeConstraseña} />
-        <Button onClick={validacion}>INICIAR SESIÓN</Button>
-      </Form>
-    </Wrapper>
-  </>
+      <Wrapper>
+        <Form className='form-horizontal  d-flex  flex-column '>
+          <Title>INICIAR SESIÓN</Title>
+          <Input type="text" placeholder="CORREO DUOC:" value={alumno} onChange={onChangeCorreo} />
+          <Input type="password" placeholder="CONTRASEÑA:" value={contraseña} onChange={onChangeConstraseña} />
+          <Button onClick={validacion}>INICIAR SESIÓN</Button>
+        </Form>
+      </Wrapper>
+    </>
   );
 }
 

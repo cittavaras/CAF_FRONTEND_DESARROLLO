@@ -3,7 +3,6 @@ import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../pages/css/style.css';
 
-import Navigation from "../components/Navigation";
 import Inicio from "../pages/Inicio"
 import Bienvenida from '../pages/Bienvenida';
 import CrearAlumno from '../components/CrearAlumno'
@@ -19,33 +18,35 @@ import ListarAlumno from "../components/ListarAlumno";
 
 import NotFoundPage from "../pages/NotFoundPage";
 
-import PrivateRoute from "./PrivateRouter"
+import Layout from "../layouts/Layout";
+import PrivateRoute from './PrivateRoute'
 
 
 export default function AppRouter(){
   return (
      <Router>
-      <Navigation />
-      <Routes>
-          {/* Rutas publicas */}
-          <Route path="/qr" element={<Inicio />} />
-          <Route path="/" element={<Bienvenida />} />
-          <Route path="/registro" Component={CrearAlumno} />
+      <Layout>
+        <Routes>
+            {/* Rutas publicas */}
+            <Route path="/qr" element={<Inicio />} />
+            <Route path="/" element={<Bienvenida />} />
+            <Route path="/registro" Component={CrearAlumno} />
 
-          {/* Creo que no deberia ser una ruta */}
-          <Route path="/notificacion" element={<Notificacion />} />
+            {/* Creo que no deberia ser una ruta */}
+            <Route path="/notificacion" element={<Notificacion />} />
 
-          {/* Rutas privadas */}
-          <PrivateRoute path="/landing" element={<LandingPageAlumno />} />
-          <PrivateRoute path="/disponible" element={<BloquesDisponibles />} />
-          <PrivateRoute path="/login" element={<Login />} />
-          <PrivateRoute path="/metrica" element={<MetricaAlumno />} />
-          <PrivateRoute path="/admin" element={<AdminPage />} />
-          <PrivateRoute path="/listar" Component={ListarAlumno} />
+            {/* Rutas privadas */}
+            <Route path="/landing" element={<LandingPageAlumno />} />
+            <Route path="/disponible" element={<BloquesDisponibles />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/metrica" element={<MetricaAlumno />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/listar" Component={ListarAlumno} />
 
-          {/* Ruta que no existe */}
-          <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+            {/* Ruta que no existe */}
+            <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Layout>  
      </Router>
   )
 }
