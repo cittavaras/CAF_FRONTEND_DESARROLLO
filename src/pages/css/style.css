@@ -1,0 +1,106 @@
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-image: url(../img/gimnasio.jpeg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Lato', sans-serif;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #042945;
+  opacity: 0.8; /* ajustarla opacidad según tus necesidades */
+  z-index: -1; 
+}
+
+.nav-container {
+  width: 100%;
+  height: 50px; /* ajustar el alto según sea necesario */
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #242222; /* ajustar el color según sea necesario */
+  z-index: 9999; /* asegurarse de que la barra de navegación esté por encima de otros elementos */
+}
+
+nav {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Lato', sans-serif;
+}
+
+.navbar-nav {
+  background-color: #242222; /* ajustar el color según sea necesario */
+  width: 100%;
+}
+
+.button-calendar {
+  display: none;
+}
+
+.button {
+  background-color: #959CA1;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  font-family: 'Lato', sans-serif;
+}
+
+.button:hover {
+  background-color: #2980b9;
+  color: #fff;
+}
+
+
+/* .outer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  text-align: center;
+  color: blanchedalmond;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.qr-code-container {
+  display: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.qr-code {
+  width: 80%;
+  max-width: 400px;
+} */

@@ -1,0 +1,77 @@
+
+
+/* .centerAll {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 720px;
+    width: 100%;
+    max-height: 1280px;
+    height: 1280px;
+    
+
+  } */
+
+  /* h1 {
+    position: absolute;
+    top: 150px;
+    left: 30%;
+    font-family: 'Kodchasan';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 57px;
+    line-height: 74px;
+    display: flex;
+    align-items: center;
+  } */
+
+  /* al parrafo hay que ponerle la clase opcion para que funcione */
+  /* .opcion {
+    position: absolute;
+    top: 230px;
+    left: 30%;
+    font-family: 'Kodchasan';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 23px;
+    line-height: 30px;
+  } */
+
+
+
+
+/* .calender { */
+   /* display: flex;
+   justify-content: center;
+   align-items: center; */
+   /* max-width: 720px;
+   max-height: 1280px;
+   position: absolute;
+   width: 720px;
+   height: 1280px;
+   top: 40%;
+   left: 40%;
+} */
+
+
+/* @media (max-width: 700px) {
+ h1, .opcion {
+    left: 5%;
+ }
+ .calender {
+    left: 25%;
+ }
+}
+@media (max-width: 520px) {
+    .opcion {
+       top: 280px;
+    }
+    h1 {
+        top: 120px;
+    }
+    .calender {
+        top: 50%;
+        left: 5%;
+        width:90%;
+     }
+   } */

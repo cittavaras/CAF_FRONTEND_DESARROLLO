@@ -1,0 +1,147 @@
+/* body {
+  background-image: url("../img/FONDO.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+} */
+
+/* .centerAll {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+/* h1 {
+  position: absolute;
+  top: 200px;
+  left: 35%;
+  font-family: 'Kodchasan';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 57px;
+  line-height: 74px;
+} */
+
+/* .opcion {
+  position: absolute;
+  top: 350px;
+  left: 35%;
+  font-family: 'Kodchasan';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 23px;
+  line-height: 30px;
+} */
+
+/* .gridinfo {
+  position: absolute;
+  top: 500px;
+  left: 35%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+
+  font-family: 'Kodchasan';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 23px;
+  line-height: 30px;
+
+} */
+
+/* .boton {
+  background: #000000;
+  border-radius: 116px 50px 116px 50px;
+  padding: 50px;
+  color: #fff;
+  width: 200px;
+  height: 60px;
+} */
+
+
+
+
+
+
+
+/* @media (max-width: 720px) {
+
+  body {
+    background-image: url("../img/FONDO.png");
+  }
+
+  .centerAll {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 720px;
+    width: 100%;
+    max-height: 1280px;
+    height: 921px;
+    
+
+  }
+
+  h1 {
+    position: absolute;
+    top: 205px;
+    left: 10%;
+    font-family: 'Kodchasan';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 57px;
+    line-height: 74px;
+  } */
+
+  /* al parrafo hay que ponerle la clase opcion para que funcione */
+  /* .opcion {
+    position: absolute;
+    top: 350px;
+    left: 10%;
+    font-family: 'Kodchasan';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 23px;
+    line-height: 30px;
+  } */
+
+  /* al div que contiene las opciones hay que ponerle la clase gridinfo para que funcione */
+  /* .gridinfo {
+    position: absolute;
+    top: 450px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px 20px;
+    left: 10%;
+    margin-left: -30px;
+
+    font-family: 'Kodchasan';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 23px;
+    line-height: 30px;
+
+  } */
+
+  /* .boton {
+    background: #000000;
+    border-radius: 116px 50px 116px 50px; */
+    /* padding: 50px; */
+    /* color: #fff;
+    width: 200px;
+    height: 60px;
+  }
+} */
+
+/* @media (max-width: 440px) {
+  .gridinfo {
+    gap: 30px 20px;
+
+  }
+
+  .boton {
+    height: 55px;
+    width: 170px;
+
+  }
+} */
