@@ -15,7 +15,7 @@ const ReservarSesion = (props) => {
 
   const getSesiones = async () => {
     try {
-      const res = await axios.get('https://gym.ivaras.cl/api/sesiones');
+      const res = await axios.get('https://caf.ivaras.cl/api/sesiones');
       setSesiones(res?.data??[]);
     } catch(error) {
       console.log(error);

@@ -24,7 +24,7 @@ const Login = () => {
   const validacion = async (e) => {
     e.preventDefault();
 
-     if (!alumno || !contraseña) {  
+    if (!alumno || !contraseña) {  
       alert('Debe ingresar todos los campos');
       return;
     }
@@ -33,7 +33,7 @@ const Login = () => {
       return;
     }
     else {
-      const res = await axios.post(`https://gym.ivaras.cl/api/alumnos/login`, {correo: alumno, password: contraseña});
+      const res = await axios.post(`https://caf.ivaras.cl/api/alumnos/login`, {correo: alumno, password: contraseña});
       console.log(res);
       try {
         const usuario = res?.data?.respAlumno

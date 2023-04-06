@@ -18,7 +18,7 @@ export default class CrearAlumno extends Component {
   }
 
   async componentDidMount() {
-    const res = await axios.get('https://gym.ivaras.cl/api/alumnos');
+    const res = await axios.get('https://caf.ivaras.cl/api/alumnos');
     this.setState({ alumnos: res.data });
   }
 
@@ -51,9 +51,8 @@ export default class CrearAlumno extends Component {
         tipoUsuario: this.state.tipoUsuario
       }
 
-      const res = await axios.post('https://gym.ivaras.cl/api/alumnos', newAlumno);
+      const res = await axios.post('https://caf.ivaras.cl/api/alumnos', newAlumno);
       console.log('res', res);
-      alert('Solicitud enviada correctamente');
       window.location.href = "/notificacion";
     }
 
@@ -68,7 +67,6 @@ export default class CrearAlumno extends Component {
 
     return (
       <>
-        <Navigation />
         <Login className='login'>
           <form className="form-horizontal" >
             <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet"></link>

@@ -21,7 +21,7 @@ class ListarAlumno extends Component {
   // Función para obtener la lista de alumnos
   getAlumnos = async () => {
     try {
-      const res = await axios.get('https://gym.ivaras.cl/api/alumnos');
+      const res = await axios.get('https://caf.ivaras.cl/api/alumnos');
       // Filtrar los alumnos que son del tipo 'Alumno' y que no estén activos
       const alumnos = res.data.alumnos.filter(alumno => alumno.tipoUsuario === 'Alumno' && alumno.active === false);
       const startIndex = this.state.paginaNumero * this.state.porPagina;
@@ -37,21 +37,21 @@ class ListarAlumno extends Component {
 
   // Función para eliminar un alumno
   eliminarAlumno = async (id) => {
-    await axios.delete(`https://gym.ivaras.cl/api/alumnos/${id}`);
+    await axios.delete(`https://caf.ivaras.cl/api/alumnos/${id}`);
     this.getAlumnos();
   }
 
 
   // Función para aceptar un alumno
   aceptarAlumno = async (id) => {
-    const res = await axios.put(`https://gym.ivaras.cl/api/alumnos/${id}`, { active: true });
+    const res = await axios.put(`https://caf.ivaras.cl/api/alumnos/${id}`, { active: true });
     this.getAlumnos();
     console.log(res);
     console.log(res.data.alumnos);
   }
     // try
     // {
-    // const res = await axios.get(`https://gym.ivaras.cl/api/alumnos/${id}`);
+    // const res = await axios.get(`https://caf.ivaras.cl/api/alumnos/${id}`);
     // const usuario = res.data.find(element => element._id === id); 
     // console.log(usuario);
     // }
@@ -72,7 +72,6 @@ class ListarAlumno extends Component {
   render() {
     return (
       <>
-        <NavAdmin />
         <DivT>
           <Div className="row">
             {

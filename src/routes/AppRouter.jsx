@@ -19,7 +19,11 @@ import ListarAlumno from "../components/ListarAlumno";
 import NotFoundPage from "../pages/NotFoundPage";
 
 import Layout from "../layouts/Layout";
-import PrivateRoute from './PrivateRoute'
+
+import PrivateRoute from "./PrivateRoute";
+import PublicRoute from './PublicRoute';
+import roles from '../helpers/roles';
+import routes from '../helpers/routes';
 
 
 export default function AppRouter(){
@@ -31,17 +35,20 @@ export default function AppRouter(){
             <Route path="/qr" element={<Inicio />} />
             <Route path="/" element={<Bienvenida />} />
             <Route path="/registro" Component={CrearAlumno} />
-
-            {/* Creo que no deberia ser una ruta */}
+            <Route path="/login" element={<Login />} />
             <Route path="/notificacion" element={<Notificacion />} />
 
             {/* Rutas privadas */}
-            <Route path="/landing" element={<LandingPageAlumno />} />
-            <Route path="/disponible" element={<BloquesDisponibles />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/metrica" element={<MetricaAlumno />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="/listar" Component={ListarAlumno} />
+            <PrivateRoute path="/landing" element={<LandingPageAlumno />} />
+            <PrivateRoute path="/disponible" element={<BloquesDisponibles />} />
+            <PrivateRoute path="/metrica" element={<MetricaAlumno />} />
+            <PrivateRoute path="/admin" element={<AdminPage />} />
+            <PrivateRoute path="/listar" Component={ListarAlumno} />
+
+            {/* TODO: Despues de configurar rutas privadas y roles cambiar linea 43 y 44 en 
+            todas las lineas reemplazar path="" por path={routes.registro} por ejemplo
+            <Route hasRole={roles.admin} path="/admin" element={<AdminPage />} />
+            <Route hasRole={roles.admin} path="/listar" Component={ListarAlumno} /> */}
 
             {/* Ruta que no existe */}
             <Route path="*" element={<NotFoundPage />} />

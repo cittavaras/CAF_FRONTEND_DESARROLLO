@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react';
 import BloquesDisponibles from '../pages/BloquesDisponibles'
+import routes from '../helpers/routes';
+import useAuth from '../auth/useAuth';
 
 const Navigation = () => {
 
@@ -21,6 +23,8 @@ const Navigation = () => {
         setOpen(false);
     };
 
+    // const { logout } = useAuth();
+
     return (
         <>
             <div className='nav-container'>
@@ -33,6 +37,7 @@ const Navigation = () => {
                         <div className="collapse navbar-collapse" id="navbarNav">
                             <ul className="navbar-nav ml-auto show">
                                 <li className="nav-item">
+                                    {/* TODO: <Link className="nav-link" to={routes.registro}></Link> */}
                                     <Link className="nav-link" to="/registro">Registro</Link>
                                 </li>
                                 <li className="nav-item">
@@ -60,6 +65,10 @@ const Navigation = () => {
                                         setActiveStep={setActiveStep}
                                         handleClose={handleClose}
                                         handleOpen={handleOpen} />}
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" >Cerrar sesion</Link> 
+                                    {/* TODO: colocar funcion onClick={logout} cuando se configure las rutas y lo demas */}
                                 </li>
                             </ul>
                         </div>
