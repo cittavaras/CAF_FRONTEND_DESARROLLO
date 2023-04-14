@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import styled from "styled-components";
+import { useNavigate, Link } from 'react-router-dom';
+import useAuth from '../auth/useAuth';
 
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet"></link>
 
 const Login = () => {
+
+  const navigate = useNavigate();
+
+  const { login } = useAuth();
+
   const [alumno, setAlumno] = useState('');
   const [contraseña, setContraseña] = useState('');
 
@@ -38,13 +45,15 @@ const Login = () => {
       try {
         const usuario = res?.data?.respAlumno
         if (!!usuario) {
+          login(usuario);
+          console.log('usuario', usuario);
           if (usuario.tipoUsuario === 'Admin') {
             alert('Bienvenido administrador');
-            window.location.href = "/admin";
+            navigate('/landing');
           }
           else if (usuario.tipoUsuario === 'Alumno') {
             alert('Bienvenido alumno');
-            window.location.href = "/landing";
+            navigate('/landing');
           }
           else {
 
@@ -64,35 +73,80 @@ const Login = () => {
   }
 
   return (
-    <>
-      <Wrapper>
-        <Form className='form-horizontal  d-flex  flex-column '>
-          <Title>INICIAR SESIÓN</Title>
-          <Input type="text" placeholder="CORREO DUOC:" value={alumno} onChange={onChangeCorreo} />
-          <Input type="password" placeholder="CONTRASEÑA:" value={contraseña} onChange={onChangeConstraseña} />
-          <Button onClick={validacion}>INICIAR SESIÓN</Button>
-        </Form>
-      </Wrapper>
-    </>
+    
+    <OuterContainer id="login-img">
+      <img src="/img/gym-draw-8.png" alt="Gym Draw" id="login-img" />
+      <div className="vector-1" />
+      <div className="vector-2" />
+      <div className="vector-6" />
+      <Container>
+        <Wrapper>
+          <Login0 className='login0'>
+            <Form className='form-horizontal  d-flex  flex-column '>
+              <Title>INICIAR SESIÓN</Title>
+              {/* <Input type="text" placeholder="CORREO DUOC:" value={alumno} onChange={onChangeCorreo} /> */}
+              <InputCorreo type="mail" placeholder="CORREO DUOC:" name="correo" value={alumno} onChange={onChangeCorreo} />
+              {/* <Input type="password" placeholder="CONTRASEÑA:" value={contraseña} onChange={onChangeConstraseña} /> */}
+              <InputPass type="password" placeholder="CONTRASEÑA" name="contraseña" value={contraseña} onChange={onChangeConstraseña} />
+              <Button onClick={validacion}>INICIAR SESIÓN</Button>
+              <div style={{ textAlign: 'center', marginTop: '20px' }}>
+             <span style={{ borderBottom: '1px solid #FFF', color: '#FFF', textDecoration: 'none' }}>
+              No tienes cuenta? Puedes crearte una aquí</span></div>
+            </Form>
+          </Login0>  
+        </Wrapper>
+      </Container>    
+    </ OuterContainer>
   );
 }
 
+
+const Login0 = styled.div`
+margin-top: 50px;
+display: flex;
+justify-content: center;
+align-items: center;
+`;
+
+const OuterContainer = styled.div`
+`
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: left;
+  padding: 20px;
+  border-radius: 5px;
+  opacity: 0.9;
+  /* padding-right: 100px; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: left;
+  padding: 20px;
+  border-radius: 5px;
+  opacity: 0.9;
+  background-image: url('/img/gym-draw-8.png'); /* ruta de la imagen */
+  background-size: cover;
+  background-position: center;
+
+`;
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  /* height: 100vh; */
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid #ccc;
+  border: 1px  #ccc;
   padding: 30px;
   border-radius: 5px;
-  background-color: #fff;
+/*   background-color: #fff; */
   opacity: 0.9;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 `;
@@ -100,19 +154,10 @@ const Form = styled.form`
 const Title = styled.h1`
   font-size: 24px;
   margin-bottom: 20px;
-  color: #333;
+  color: #FFFFFF;
   text-align: center;
   font-family: 'Lato', sans-serif;
   font-weight: bold;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
-  font-family: 'Lato, sans-serif';
 `;
 
 const Button = styled.button`
@@ -130,5 +175,60 @@ const Button = styled.button`
   }
 `;
 
+const InputCorreo = styled.input`
+  width: 48%;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  margin-left: 4%;
+  margin-bottom: 20px;
+  border-radius: 17px;
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  width: 100%;
+  margin-left: 0;
+  font-size: 14px;
+  font-weight: bold;
+
+    &:focus {
+    &::placeholder {
+      transform: translateY(-14px);
+      font-size: 14px;
+      color: #302f2f;
+    }
+  }
+
+  &::placeholder {
+    transition: all 0.3s ease-in-out;
+  }
+`;
+
+const InputPass = styled.input`
+  width: 48%;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  margin-left: 4%;
+  margin-bottom: 20px;
+  border-radius: 17px;
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  width: 100%;
+  margin-left: 0;
+  font-size: 14px;
+  font-weight: bold; 
+
+  &:focus {
+    &::placeholder {
+      transform: translateY(-14px);
+      font-size: 14px;
+      color: #000000;
+    }
+  }
+
+
+  &::placeholder {
+    transition: all 0.3s ease-in-out;
+  }
+`;
 
 export default Login;
+

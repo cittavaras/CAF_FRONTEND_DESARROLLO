@@ -1,100 +1,132 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import NavAdmin from './Navigation';
-import ReactPaginate from 'react-paginate'; //para importar la libreria de paginacion
+import ReactPaginate from 'react-paginate';
+import MotivoRechazo from './MotivoRechazo';
 
-class ListarAlumno extends Component {
-  state = {
-    alumnos: [],
-    paginaNumero: 0, // valor inicial para la paginacion
-    porPagina: 5, // cantidad de elementos por pagina
-    totalCount: 0, // total de elementos obtenidos
+const ListarAlumno = () => {
+  const [alumnos, setAlumnos] = useState([]);
+  const [paginaNumero, setPaginaNumero] = useState(0);
+  const [porPagina, setPorPagina] = useState(5);
+  const [totalCount, setTotalCount] = useState(0);
+  const [alumnoEliminado, setAlumnoEliminado] = useState(null);
+  
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = (e, al) =>  {
+    e.preventDefault();
+    setAlumnoEliminado(al)
+    setOpen(true)
+   
+  };
+  const handleClose = () => {
+    setAlumnoEliminado(null);
+    setOpen(false);
+    // setSelectedEvents([]);
   }
 
-  componentDidMount() {
-    
-    this.getAlumnos();
-  }
+
+  useEffect(() => {
+    getAlumnos();
+  }, [paginaNumero]);
 
   // Función para obtener la lista de alumnos
-  getAlumnos = async () => {
+  const getAlumnos = async () => {
     try {
       const res = await axios.get('https://caf.ivaras.cl/api/alumnos');
       // Filtrar los alumnos que son del tipo 'Alumno' y que no estén activos
       const alumnos = res.data.alumnos.filter(alumno => alumno.tipoUsuario === 'Alumno' && alumno.active === false);
-      const startIndex = this.state.paginaNumero * this.state.porPagina;
+      const startIndex = paginaNumero * porPagina;
       // Seleccionar los alumnos de la página actual según el índice de inicio y la cantidad de elementos por página
-      const alumnosSeleccionados = alumnos.slice(startIndex, startIndex + this.state.porPagina);
+      const alumnosSeleccionados = alumnos.slice(startIndex, startIndex + porPagina);
       // Actualizar el estado con los alumnos seleccionados y el total de alumnos obtenidos
-      this.setState({ alumnos: alumnosSeleccionados, totalCount: alumnos.length });
+      setAlumnos(alumnosSeleccionados);
+      setTotalCount(alumnos.length);
     } catch (error) {
       console.log(error);
     }
   }
-
-
+  
   // Función para eliminar un alumno
-  eliminarAlumno = async (id) => {
-    await axios.delete(`https://caf.ivaras.cl/api/alumnos/${id}`);
-    this.getAlumnos();
-  }
+  const eliminarAlumno = async (e, message) => {
+    e.preventDefault();
+    const res = await axios.delete(`https://caf.ivaras.cl/api/alumnos/${alumnoEliminado._id}`);
 
+    await axios
+    .post('https://caf.ivaras.cl/api/send-email', {
+      to: alumnoEliminado?.correo,
+      subject: 'Solicitud declinada CAF IVARAS',
+      text: `${alumnoEliminado?.nombre}, ${message} `,
+      html: `<strong>${alumnoEliminado?.nombre}</strong>, ${message}`,
+    })
+    .then((response) => {
+      console.log('Email sent successfully:', response.data);
+    })
+    .catch((error) => {
+      console.error('Error sending email:', error);
+    });
+
+    handleClose();
+    getAlumnos();
+
+  }
 
   // Función para aceptar un alumno
-  aceptarAlumno = async (id) => {
+  const aceptarAlumno = async (id) => {
     const res = await axios.put(`https://caf.ivaras.cl/api/alumnos/${id}`, { active: true });
-    this.getAlumnos();
-    console.log(res);
-    console.log(res.data.alumnos);
-  }
-    // try
-    // {
-    // const res = await axios.get(`https://caf.ivaras.cl/api/alumnos/${id}`);
-    // const usuario = res.data.find(element => element._id === id); 
-    // console.log(usuario);
-    // }
-    // catch(error) {
-    //   console.log(error);
-    // }
-    
-  
- 
-  // Función para manejar el cambio de página
-  handlePageClick = (e) => {
-    const paginaSeleccionada = e.selected; // Página seleccionada
-    this.setState({ paginaNumero: paginaSeleccionada }, () => {
-      this.getAlumnos();
+    const {correo, nombre} = res.data;
+    await axios
+    .post('https://caf.ivaras.cl/api/send-email', {
+      to: correo,
+      subject: 'Solicitud Aceptada CAF IVARAS',
+      text: `${nombre}, Le informamos que su cuenta ha sido activada exitosamente, recuerde que para ingresar necesita su correo y el rut como contraseña sin puntos, guion ni digito verificador guiense por el siguiente link https://caf.ivaras.cl/login `,
+      html: `<strong>${nombre}</strong>, Le informamos que su cuenta ha sido activada exitosamente, recuerde que para ingresar necesita su correo y el rut como contraseña sin puntos, guion ni digito verificador guiense por el siguiente link https://caf.ivaras.cl/login`,
+    })
+    .then((response) => {
+      console.log('Email sent successfully:', response.data);
+    })
+    .catch((error) => {
+      console.error('Error sending email:', error);
     });
-  }; // fin de handlePageClick
 
-  render() {
-    return (
-      <>
-        <DivT>
-          <Div className="row">
-            {
-              this.state.alumnos.map(alumno => (
-                <div className="col-md4 p-2" key={alumno._id}>
-                  <div className="card">
-                    <div className="card-header d-flex justify-content-between">
-                      <h3>{alumno.nombre}</h3>
-                      <button type='button' className="btn btn-secondary" onClick={() => { this.aceptarAlumno(alumno._id) }}>
-                        Aceptar Solicitud
-                      </button>
-                    </div>
-                    <div className="card-body">
-                      <p>Rut: {alumno.rut}</p>
-                      <p>Correo: {alumno.correo}</p>
-                      <p>Carrera: {alumno.carrera}</p>
-                    </div>
-                    <div className="card-footer">
-                      <button type="button" className="btn btn-danger" onClick={() => this.eliminarAlumno(alumno._id)}>
+    console.log(res);
+    console.log(res?.data);
+    
+    getAlumnos();
+  }
+
+  // Función para manejar el cambio de página
+  const handlePageClick = (e) => {
+    const paginaSeleccionada = e.selected; // Página seleccionada
+    setPaginaNumero(paginaSeleccionada);
+  }; // fin de handlePageClick
+  return (
+    <>
+      <DivT>
+        <Div className="row">
+          {
+            alumnos.map(alumno => (
+              <div className="col-md4 p-2" key={alumno._id}>
+                <div className="card">
+                  <div className="card-header d-flex justify-content-between">
+                    <h3>{alumno.nombre}</h3>
+                    <button type='button' className="btn btn-secondary" onClick={() => { aceptarAlumno(alumno._id) }}>
+                      Aceptar Solicitud
+                    </button>
+                  </div>
+                  <div className="card-body">
+                    <p>Rut: {alumno.rut}</p>
+                    <p>Correo: {alumno.correo}</p>
+                    <p>Carrera: {alumno.carrera}</p>
+                  </div>
+                  <div className="card-footer">
+                    <button type="button" className="btn btn-danger" onClick={(e) => { handleOpen(e, alumno) }} >
                       Eliminar
-                      </button>
+                    </button>
                   </div>
                 </div>
+                  {open && <MotivoRechazo open={open} setOpen={setOpen} handleClose={handleClose}  alumnoEliminado={alumnoEliminado} eliminarAlumno={eliminarAlumno}/>}
               </div>
             ))
           }
@@ -103,8 +135,8 @@ class ListarAlumno extends Component {
         <ReactPaginate
           previousLabel={'Anterior'}
           nextLabel={'Siguiente'}
-          pageCount={Math.ceil(this.state.totalCount / this.state.porPagina)}
-          onPageChange={this.handlePageClick}
+          pageCount={Math.ceil(totalCount / porPagina)}
+          onPageChange={handlePageClick}
           containerClassName={'pagination justify-content-center'}
           pageClassName={'page-item'}
           pageLinkClassName={'page-link'}
@@ -117,8 +149,7 @@ class ListarAlumno extends Component {
 
       </DivT>
     </>
-  )
-  }
+  );
 };
 
 const DivT = styled.div`
@@ -131,6 +162,5 @@ const Div = styled.div`
   font-family: 'Kodchasan';
   top: 10px;
 `;
-
 
 export default ListarAlumno;

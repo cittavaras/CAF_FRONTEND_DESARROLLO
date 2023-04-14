@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
+import React, { useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../pages/css/style.css';
 
@@ -10,50 +10,112 @@ import CrearAlumno from '../components/CrearAlumno'
 import Notificacion from "../pages/notificacion";
 
 import LandingPageAlumno from "../pages/LadingPageAlumno";
-import BloquesDisponibles from "../pages/BloquesDisponibles";
 import Login from '../pages/Login';
 import MetricaAlumno from '../pages/MetricaAlumno';
-import AdminPage from "../pages/AdminVista";
+import AdminPage from "../pages/admin/AdminVista";
 import ListarAlumno from "../components/ListarAlumno";
 
 import NotFoundPage from "../pages/NotFoundPage";
 
+import AgendaReserva from "../components/AgendaReserva";
+
 import Layout from "../layouts/Layout";
 
-import PrivateRoute from "./PrivateRoute";
-import PublicRoute from './PublicRoute';
+import useAuth from '../auth/useAuth';
 import roles from '../helpers/roles';
 import routes from '../helpers/routes';
 
 
-export default function AppRouter(){
+export default function AppRouter() {
+  const { isLogged } = useAuth();
+  useEffect(() => {
+    //loadSession();
+  }, [isLogged]);
   return (
-     <Router>
+    <Router>
       <Layout>
         <Routes>
-            {/* Rutas publicas */}
-            <Route path="/qr" element={<Inicio />} />
-            <Route path="/" element={<Bienvenida />} />
-            <Route path="/registro" Component={CrearAlumno} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/notificacion" element={<Notificacion />} />
+          {/* Rutas publicas */}
+          <Route path="/registro" element={
+            <PublicRoute>
+              <CrearAlumno />
+            </PublicRoute>}
+          />
+          <Route path="/qr" element={
+            <PublicRoute>
+              <Inicio />
+            </PublicRoute>}
+          />
+          <Route path="/bienvenida" element={
+            <PublicRoute>
+              <Bienvenida />
+            </PublicRoute>}
+          />
+          <Route path="/" element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>}
+          />
+          {/* Ruta que no existe */}
+          <Route path="*" element={
+            <PublicRoute>
+              <NotFoundPage />
+            </PublicRoute>}
+          />
+          <Route path="/notificacion" element={
+            <PublicRoute>
+              <Notificacion />
+            </PublicRoute>}
+          />
 
-            {/* Rutas privadas */}
-            <PrivateRoute path="/landing" element={<LandingPageAlumno />} />
-            <PrivateRoute path="/disponible" element={<BloquesDisponibles />} />
-            <PrivateRoute path="/metrica" element={<MetricaAlumno />} />
-            <PrivateRoute path="/admin" element={<AdminPage />} />
-            <PrivateRoute path="/listar" Component={ListarAlumno} />
 
-            {/* TODO: Despues de configurar rutas privadas y roles cambiar linea 43 y 44 en 
-            todas las lineas reemplazar path="" por path={routes.registro} por ejemplo
-            <Route hasRole={roles.admin} path="/admin" element={<AdminPage />} />
-            <Route hasRole={roles.admin} path="/listar" Component={ListarAlumno} /> */}
-
-            {/* Ruta que no existe */}
-            <Route path="*" element={<NotFoundPage />} />
+          {/* Rutas privadas */}
+          {/* TODO: Arreglar esta ruta desde el admin y colocando la ruta desde el navegador no se deberia mostrar */}
+          <Route path="/landing" element={
+            <PrivateRoute >
+              <LandingPageAlumno />
+            </PrivateRoute>}
+          />
+          <Route path="/reserva" element={
+            <PrivateRoute>
+              <AgendaReserva />
+            </PrivateRoute>}
+          />
+          <Route path="/metrica" element={
+            <PrivateRoute >
+              <MetricaAlumno />
+            </PrivateRoute>}
+          />
+          <Route path="/admin" element={
+            <PrivateRoute hasRole={roles.admin} >
+              <AdminPage />
+            </PrivateRoute>}
+          />
+          <Route path="/listar" element={
+            <PrivateRoute hasRole={roles.admin} >
+              <ListarAlumno />
+            </PrivateRoute>}
+          />
         </Routes>
-      </Layout>  
-     </Router>
+      </Layout>
+    </Router>
   )
+}
+
+function PrivateRoute({ children, redirectTo = '/login', hasRole: tipoUsuario }) {
+  const { hasRole, isLogged } = useAuth();
+
+  if (tipoUsuario && !hasRole(tipoUsuario)) {
+    return <Navigate to={redirectTo} />;
+  }
+
+  if (!isLogged()) {
+    return <Navigate to={routes.login} />;
+  }
+  return children;
+}
+
+function PublicRoute({ children, redirectTo = '/landing' }) {
+  const { isLogged } = useAuth();
+  return !isLogged() ? children : <Navigate to={redirectTo} />;
 }

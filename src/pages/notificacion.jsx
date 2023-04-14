@@ -49,7 +49,7 @@ const Notificacion = () => {
       <Check />
       <div style={{height: '20px'}}></div>
       <Mensaje>TU SOLICITUD HA SIDO ENVIADA Y ESTÁ SIENDO REVISADA POR EL ADMINISTRADOR</Mensaje>
-      <BotonExcelente>Excelente</BotonExcelente>
+      <BotonExcelente>Ya puedes cerrar esta ventana</BotonExcelente>
     </Container>
   );
 };

@@ -22,7 +22,7 @@ moment.locale("es");
 
 const localizer = momentLocalizer(moment);
 
-const BloquesDisponibles = ({open, setOpen, selectedEvents, SetSelectedEvents, activeStep, setActiveStep, handleOpen, handleClose }) => {
+const BloquesDisponibles = ({open, setOpen, selectedEvents, SetSelectedEvents, activeStep, setActiveStep, handleOpenAdmin, handleCloseAdmin }) => {
 //   const [open, setOpen] = useState(false);
 //   const [selectedEvents, setSelectedEvents] = useState([]);
 //   const [activeStep, setActiveStep] = useState(0);
@@ -81,7 +81,7 @@ const BloquesDisponibles = ({open, setOpen, selectedEvents, SetSelectedEvents, a
 
   return (
     <>
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+      <Dialog open={open} onClose={handleCloseAdmin} fullWidth maxWidth="md">
         <Stepper activeStep={activeStep} alternativeLabel>
           <Step>
             <StepLabel>Selector</StepLabel>

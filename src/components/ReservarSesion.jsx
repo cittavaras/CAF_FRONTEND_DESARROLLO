@@ -1,17 +1,31 @@
 import axios from 'axios';
 import React, { useState, useEffect } from "react";
-import { Button, Dialog, DialogContent, Container, DialogActions, DialogTitle, IconButton } from "@mui/material";
+import { Button, Dialog, DialogContent, Container, DialogActions, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/es";
+import useAuth from '../auth/useAuth';
 moment.locale("es");
 
 
 const localizer = momentLocalizer(moment);
 
+const alumno_sesion = JSON.parse(sessionStorage.getItem("alumno_sesion"));
+
+const CALENDAR_TITLE = "AGENDA TU RESERVA";
+const CALENDAR_PARAGRAPH = "Selecciona Mes y Día que deseas agendar para ver los bloques disponibles. Luego selecciona el bloque que deseas reservar. Recuerda que solo puedes reservar 3 bloques por día.";
+
 const ReservarSesion = (props) => {
+
+  const  { alumno }  = useAuth();
+
+  const [selectedEvents, setSelectedEvents] = useState([]);
+
+  const [sesiones, setSesiones] = useState([]);
+
+  const [eventos, setEventos] = useState([]);
 
   const getSesiones = async () => {
     try {
@@ -22,14 +36,27 @@ const ReservarSesion = (props) => {
     }
   }
 
-  const [selectedEvents, setSelectedEvents] = useState([]);
-
-  const [sesiones, setSesiones] = useState([]);
-
-  const [eventos, setEventos] = useState([]);
+  const crearReservas = async (e) => {
+    e.preventDefault();
+    try {
+      const body = {
+        rut:alumno.rut,
+        sesiones: selectedEvents,
+      }
+      const res = await axios.post('https://caf.ivaras.cl/api/reservas', body);
+      console.log(res);
+      alert('Sesiones Reservadas');
+      props.handleClose();
+    } catch(error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
       getSesiones()
+      if (props.reservasAlumno){
+        console.log('Sesiones', generateTrainingEvents(props.reservasAlumno.map))
+      }
   }, []);
 
   useEffect(() => {
@@ -46,13 +73,14 @@ const ReservarSesion = (props) => {
   }, [props.open]);
 
   const eventStyleGetter = (event) => {
-    const isSelected = selectedEvents.includes(event.id);
+    const isSelected = selectedEvents.map(e => e.id).includes(event.id);
     const style = {
       backgroundColor: isSelected ? "yellow" : "#2980b9",
       borderRadius: "0",
       opacity: 1,
       display: "block",
     };
+    style.backgroundColor = event.isValid? style.backgroundColor: "#676d70" ;
     return {
       style,
       children: (
@@ -60,6 +88,7 @@ const ReservarSesion = (props) => {
           variant="contained"
           color={isSelected ? "secondary" : "primary"}
           onClick={() => handleEventClick(event)}
+          disabled={!event?.isValid}
         >
           {event.title}
         </Button>
@@ -68,16 +97,19 @@ const ReservarSesion = (props) => {
   };
 
   const handleEventClick = (event) => {
+    if (!event.isValid){
+      return;
+    }
     const maxSelections = 3;
     if (
       selectedEvents.length < maxSelections ||
-      selectedEvents.includes(event.id)
+      selectedEvents.map(e => e.id).includes(event.id)
     ) {
       setSelectedEvents((prevState) => {
-        if (prevState.includes(event.id)) {
-          return prevState.filter((id) => id !== event.id);
+        if (prevState.map(e => e.id).includes(event.id)) {
+          return prevState.filter((e) => e.id !== event.id);
         } else {
-          return [...prevState, event.id];
+          return [...prevState, event];
         }
       });
     } else {
@@ -85,6 +117,12 @@ const ReservarSesion = (props) => {
     }
   };
 
+  console.log('selectedEvents', selectedEvents)
+
+
+
+
+  
   return (
     <Container maxWidth="lg" style={{ marginTop: '70px' }}>
       {props.open && <Dialog open={props.open} onClose={props.handleClose} fullWidth maxWidth="md">
@@ -105,6 +143,8 @@ const ReservarSesion = (props) => {
         </DialogTitle>
 
         <DialogContent>
+          <Typography variant="h5" component="h2">{CALENDAR_TITLE}</Typography>
+          <Typography variant="body1" component="p">{CALENDAR_PARAGRAPH}</Typography>
           <Calendar
             localizer={localizer}
             events={eventos}
@@ -121,7 +161,7 @@ const ReservarSesion = (props) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus color="success" variant="contained">
+          <Button autoFocus color="success" variant="contained" disabled={selectedEvents.length < 1 }  onClick={crearReservas}>
             Confirmar reserva
           </Button>
         </DialogActions>
@@ -136,7 +176,13 @@ const generateTrainingEvents = (sesiones = []) => {
     const start = moment().day(sesion.dia).set({ hours, minutes }).toDate();
     [hours, minutes] = sesion.horaFin.split(":");
     const end = moment().day(sesion.dia).set({ hours, minutes }).toDate();
-    const newSesion = { id:sesion.numeroSesion, title:`Entrenamiento ${sesion.numeroSesion}`, start, end };
+    const newSesion = { 
+      id:sesion.numeroSesion, 
+      title:`Entrenamiento ${sesion.numeroSesion} ${sesion?.count}/${sesion?.cantidadUsuarios}`, 
+      start, 
+      end,
+      isValid: sesion.count < sesion.cantidadUsuarios
+     };
       return newSesion;
   })
   return newSesiones;

@@ -12,16 +12,23 @@ const AdminPageContainer = styled(Container)`
   justify-content: center;
   align-items: center;
   height: calc(100vh - 70px);
+  opacity: 0.9;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Lato', sans-serif;
+  
 `;
 
 const FormContainer = styled(Paper)`
   padding: 40px;
-  background-color: rgba(255, 255, 255, 0.9);
+  opacity: 0.9;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 `;
 
 const Saludo = styled.h1`
   text-align: center;
   margin-bottom: 20px;
+  font-size: 24px;
+  font-family: 'Lato', sans-serif;
 `;
 
 const AdminPage = () => {
@@ -29,7 +36,7 @@ const AdminPage = () => {
     <>
       <AdminPageContainer maxWidth="lg">
         <FormContainer>
-          <Saludo>Bienvenido, Administrador</Saludo>
+          <Saludo>BIENVENIDO, ADMINISTRADOR</Saludo>
           <FormUsuario />
           <br />
           <FormParametro />
