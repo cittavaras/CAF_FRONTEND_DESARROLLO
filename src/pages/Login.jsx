@@ -75,7 +75,8 @@ const Login = () => {
   return (
     
     <OuterContainer id="login-img">
-      <img src="/img/gym-draw-8.png" alt="Gym Draw" id="login-img" />
+{/*       <img src="../img/gym-draw-8.png" alt="Gym Draw" id="login-img" /> */}
+      <img src="(../img/gym-draw-8.png)" alt="Gym Draw" id="login-img" />
       <div className="vector-1" />
       <div className="vector-2" />
       <div className="vector-6" />
@@ -90,8 +91,8 @@ const Login = () => {
               <InputPass type="password" placeholder="CONTRASEÑA" name="contraseña" value={contraseña} onChange={onChangeConstraseña} />
               <Button onClick={validacion}>INICIAR SESIÓN</Button>
               <div style={{ textAlign: 'center', marginTop: '20px' }}>
-             <span style={{ borderBottom: '1px solid #FFF', color: '#FFF', textDecoration: 'none' }}>
-              No tienes cuenta? Puedes crearte una aquí</span></div>
+                <Link to="/registro" style={{ borderBottom: '1px solid #FFF', color: '#FFF', textDecoration: 'none' }}>¿No tienes cuenta? Puedes crearte una aquí</Link>
+              </div>
             </Form>
           </Login0>  
         </Wrapper>

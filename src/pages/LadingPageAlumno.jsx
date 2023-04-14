@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import ReservarSesion from '../components/ReservarSesion';
 import useAuth from '../auth/useAuth';
 import roles from "../helpers/roles";
-import BloquesDisponibles from '../pages/admin/BloquesDisponibles'
 
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet"></link>
 
@@ -17,22 +16,6 @@ const LandingPageAlumno = ({ location }) => {
 
   const [open, setOpen] = useState(false);
   const [reservasAlumno, setReservasAlumno] = useState([]);
-
-  const [openAdmin, setOpenAdmin] = useState(false);
-    const [selectedEvents, setSelectedEvents] = useState([]);
-    const [activeStep, setActiveStep] = useState(0);
-
-    const handleOpenAdmin = () => {
-        setActiveStep(0);
-        setSelectedEvents([]);
-        setOpen(true);
-    };
-
-    const handleCloseAdmin = () => {
-        setActiveStep(0);
-        setSelectedEvents([]);
-        setOpen(false);
-    };
 
   const handleOpen = () => {
     if (reservasAlumno.length >= 3) {
@@ -79,14 +62,13 @@ const LandingPageAlumno = ({ location }) => {
               <Link className='btn' style={{ backgroundColor: '#042945', color: '#FCB32E', fontWeight: 'bold', marginBottom: '10px' }}>Rutina de trabajo</Link>
             </>}
             {hasRole(roles.admin) && <>
-              <button className='btn' style={{ backgroundColor: '#C0D437', color: '#042945', marginRight: '10px', fontWeight: 'bold', marginBottom: '10px' }} onClick={handleOpenAdmin}>Revisar Bloques</button>
+              <button className='btn' style={{ backgroundColor: '#C0D437', color: '#042945', marginRight: '10px', fontWeight: 'bold', marginBottom: '10px' }}>Revisar Bloques</button>
               <Link className='btn' style={{ backgroundColor: '#E6E7E9', color: '#042945', marginRight: '10px', fontWeight: 'bold', marginBottom: '10px' }}>Crear Usuarios</Link>
               <Link className='btn' to="/listar" style={{ backgroundColor: '#FCB32E', color: '#042945', marginRight: '10px', fontWeight: 'bold', marginBottom: '10px' }}>Solicitudes Pendientes</Link>
             </>}
           </div>
         </div>
-        {open && <ReservarSesion open={open} setOpen={setOpen} handleClose={handleClose} reservasAlumno={reservasAlumno} />}
-        {openAdmin && <BloquesDisponibles openAdmin={openAdmin} setOpenAdmin={setOpenAdmin} selectedEvents={selectedEvents} SetSelectedEvents={setSelectedEvents} activeStep={activeStep} setActiveStep={setActiveStep} handleCloseAdmin={handleCloseAdmin} handleOpenAdmin={handleOpenAdmin} />}                            
+        {open && <ReservarSesion open={open} setOpen={setOpen} handleClose={handleClose} reservasAlumno={reservasAlumno} />}                           
       </Div>
 
     </>

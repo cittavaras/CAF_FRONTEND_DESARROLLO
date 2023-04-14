@@ -55,7 +55,7 @@ const ReservarSesion = (props) => {
   useEffect(() => {
       getSesiones()
       if (props.reservasAlumno){
-        console.log('Sesiones', generateTrainingEvents(props.reservasAlumno.map))
+        console.log('Sesiones', generateTrainingEvents(props.reservasAlumno))
       }
   }, []);
 
