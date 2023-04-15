@@ -19,7 +19,7 @@ const CALENDAR_PARAGRAPH = "Selecciona Mes y Día que deseas agendar para ver lo
 
 const ReservarSesion = (props) => {
 
-  const  { alumno }  = useAuth();
+  const { alumno } = useAuth();
 
   const [selectedEvents, setSelectedEvents] = useState([]);
 
@@ -30,8 +30,8 @@ const ReservarSesion = (props) => {
   const getSesiones = async () => {
     try {
       const res = await axios.get('https://caf.ivaras.cl/api/sesiones');
-      setSesiones(res?.data??[]);
-    } catch(error) {
+      setSesiones(res?.data ?? []);
+    } catch (error) {
       console.log(error);
     }
   }
@@ -40,22 +40,29 @@ const ReservarSesion = (props) => {
     e.preventDefault();
     try {
       const body = {
-        rut:alumno.rut,
+        rut: alumno.rut,
         sesiones: selectedEvents,
       }
       const res = await axios.post('https://caf.ivaras.cl/api/reservas', body);
       console.log(res);
       alert('Sesiones Reservadas');
       props.handleClose();
-    } catch(error) {
+    } catch (error) {
       console.log(error);
     }
   }
 
   useEffect(() => {
-      getSesiones()
-      if (props.reservasAlumno){
-        console.log('Sesiones', generateTrainingEvents(props.reservasAlumno))
+    getSesiones()
+    if (props.reservasAlumno) {
+
+      const sesionesAlumno = props.reservasAlumno.map(r => {
+        return {
+          ...r.sesion [0], count:0
+        }
+      }
+      )
+        setSelectedEvents(generateTrainingEvents(sesionesAlumno))
       }
   }, []);
 
@@ -80,7 +87,7 @@ const ReservarSesion = (props) => {
       opacity: 1,
       display: "block",
     };
-    style.backgroundColor = event.isValid? style.backgroundColor: "#676d70" ;
+    style.backgroundColor = event.isValid ? style.backgroundColor : "#676d70";
     return {
       style,
       children: (
@@ -97,7 +104,12 @@ const ReservarSesion = (props) => {
   };
 
   const handleEventClick = (event) => {
-    if (!event.isValid){
+    if (!event.isValid) {
+      return;
+    }
+    if(selectedEvents.some(selected => selected.dia === event.dia && selected.id !== event.id ))
+    {
+      alert('Solo puedes reservar 1 sesion por día');
       return;
     }
     const maxSelections = 3;
@@ -117,29 +129,29 @@ const ReservarSesion = (props) => {
     }
   };
 
-  console.log('selectedEvents', selectedEvents)
 
 
 
 
-  
+
+
   return (
     <Container maxWidth="lg" style={{ marginTop: '70px' }}>
       {props.open && <Dialog open={props.open} onClose={props.handleClose} fullWidth maxWidth="md">
-        <DialogTitle sx={{ m: 0, p: 2 }} style={{marginTop: "5px", marginBottom: "20px"}}>
-            <IconButton
-            style={{marginTop: "5px", marginBottom: "5px"}}
-              aria-label="close"
-              onClick={props.handleClose}
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
+        <DialogTitle sx={{ m: 0, p: 2 }} style={{ marginTop: "5px", marginBottom: "20px" }}>
+          <IconButton
+            style={{ marginTop: "5px", marginBottom: "5px" }}
+            aria-label="close"
+            onClick={props.handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
 
         <DialogContent>
@@ -161,7 +173,7 @@ const ReservarSesion = (props) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus color="success" variant="contained" disabled={selectedEvents.length < 1 }  onClick={crearReservas}>
+          <Button autoFocus color="success" variant="contained" disabled={selectedEvents.length < 1} onClick={crearReservas}>
             Confirmar reserva
           </Button>
         </DialogActions>
@@ -176,14 +188,15 @@ const generateTrainingEvents = (sesiones = []) => {
     const start = moment().day(sesion.dia).set({ hours, minutes }).toDate();
     [hours, minutes] = sesion.horaFin.split(":");
     const end = moment().day(sesion.dia).set({ hours, minutes }).toDate();
-    const newSesion = { 
-      id:sesion.numeroSesion, 
-      title:`Entrenamiento ${sesion.numeroSesion} ${sesion?.count}/${sesion?.cantidadUsuarios}`, 
-      start, 
+    const newSesion = {
+      id: sesion.numeroSesion,
+      title: `Entrenamiento ${sesion.numeroSesion} ${sesion?.count}/${sesion?.cantidadUsuarios}`,
+      start,
       end,
-      isValid: sesion.count < sesion.cantidadUsuarios
-     };
-      return newSesion;
+      isValid: sesion.count < sesion.cantidadUsuarios,
+      dia: sesion.dia,
+    };
+    return newSesion;
   })
   return newSesiones;
 };

@@ -18,15 +18,11 @@ const LandingPageAlumno = ({ location }) => {
   const [reservasAlumno, setReservasAlumno] = useState([]);
 
   const handleOpen = () => {
-    if (reservasAlumno.length >= 3) {
-      alert('Ya reservaste estas sesiones de la semana');
-    }
-    else {
-      setOpen(true)
-    }
+      setOpen(true) 
   };
-  const handleClose = () => {
+  const handleClose = async() => {
     setOpen(false);
+  await getReservasByAlumno();
     // setSelectedEvents([]);
   }
 
@@ -38,8 +34,6 @@ const LandingPageAlumno = ({ location }) => {
       console.log(error);
     }
   }
-  console.log('reservas alumno', reservasAlumno);
-
   useEffect(() => {
     if (alumno != null) {
       getReservasByAlumno()

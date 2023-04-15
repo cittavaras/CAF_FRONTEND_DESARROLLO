@@ -49,7 +49,7 @@ const Login = () => {
           console.log('usuario', usuario);
           if (usuario.tipoUsuario === 'Admin') {
             alert('Bienvenido administrador');
-            navigate('/landing');
+            navigate('/admin');
           }
           else if (usuario.tipoUsuario === 'Alumno') {
             alert('Bienvenido alumno');
@@ -74,9 +74,7 @@ const Login = () => {
 
   return (
     
-    <OuterContainer id="login-img">
-{/*       <img src="../img/gym-draw-8.png" alt="Gym Draw" id="login-img" /> */}
-      <img src="(../img/gym-draw-8.png)" alt="Gym Draw" id="login-img" />
+    <OuterContainer>
       <div className="vector-1" />
       <div className="vector-2" />
       <div className="vector-6" />
@@ -91,8 +89,7 @@ const Login = () => {
               <InputPass type="password" placeholder="CONTRASEÑA" name="contraseña" value={contraseña} onChange={onChangeConstraseña} />
               <Button onClick={validacion}>INICIAR SESIÓN</Button>
               <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                <Link to="/registro" style={{ borderBottom: '1px solid #FFF', color: '#FFF', textDecoration: 'none' }}>¿No tienes cuenta? Puedes crearte una aquí</Link>
-              </div>
+                <Link to="/registro" style={{ borderBottom: '1px solid #FFF', color: '#FFF', textDecoration: 'none' }}>¿No tienes cuenta? Puedes crearte una aquí</Link></div>
             </Form>
           </Login0>  
         </Wrapper>
@@ -110,7 +107,14 @@ align-items: center;
 `;
 
 const OuterContainer = styled.div`
-`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+
+`;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -120,17 +124,6 @@ const Container = styled.div`
   border-radius: 5px;
   opacity: 0.9;
   /* padding-right: 100px; */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: left;
-  padding: 20px;
-  border-radius: 5px;
-  opacity: 0.9;
-  background-image: url('/img/gym-draw-8.png'); /* ruta de la imagen */
-  background-size: cover;
-  background-position: center;
-
 `;
 
 const Wrapper = styled.div`
