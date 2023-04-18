@@ -12,7 +12,6 @@ import Notificacion from "../pages/notificacion";
 import LandingPageAlumno from "../pages/LadingPageAlumno";
 import Login from '../pages/Login';
 import MetricaAlumno from '../pages/MetricaAlumno';
-import AdminPage from "../pages/admin/AdminVista";
 import ListarAlumno from "../components/ListarAlumno";
 
 import NotFoundPage from "../pages/NotFoundPage";
@@ -24,6 +23,10 @@ import Layout from "../layouts/Layout";
 import useAuth from '../auth/useAuth';
 import roles from '../helpers/roles';
 import routes from '../helpers/routes';
+import CrearUsuario from "../components/CrearUsuario";
+import ListarActivos from "../components/ListarActivos";
+
+import Calendario from "../pages/calendario";
 
 
 export default function AppRouter() {
@@ -67,7 +70,11 @@ export default function AppRouter() {
               <Notificacion />
             </PublicRoute>}
           />
-
+          <Route path="/calendario" element={
+            <PublicRoute>
+              <Calendario />
+            </PublicRoute>}
+          />
 
           {/* Rutas privadas */}
           {/* TODO: Arreglar esta ruta desde el admin y colocando la ruta desde el navegador no se deberia mostrar */}
@@ -86,14 +93,19 @@ export default function AppRouter() {
               <MetricaAlumno />
             </PrivateRoute>}
           />
-          <Route path="/admin" element={
-            <PrivateRoute hasRole={roles.admin} >
-              <AdminPage />
-            </PrivateRoute>}
-          />
           <Route path="/listar" element={
             <PrivateRoute hasRole={roles.admin} >
               <ListarAlumno />
+            </PrivateRoute>}
+          />
+          <Route path="/crearUsuario" element={
+            <PrivateRoute hasRole={roles.admin} >
+              <CrearUsuario />
+            </PrivateRoute>}
+          />
+          <Route path="/listarActivos" element={
+            <PrivateRoute hasRole={roles.instructor} >
+              <ListarActivos />
             </PrivateRoute>}
           />
         </Routes>
@@ -102,7 +114,7 @@ export default function AppRouter() {
   )
 }
 
-function PrivateRoute({ children, redirectTo = '/login', hasRole: tipoUsuario }) {
+function PrivateRoute({ children, redirectTo = '/', hasRole: tipoUsuario }) {
   const { hasRole, isLogged } = useAuth();
 
   if (tipoUsuario && !hasRole(tipoUsuario)) {

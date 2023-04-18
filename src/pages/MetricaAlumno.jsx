@@ -2,6 +2,8 @@ import React from 'react';
 import { useTable } from 'react-table';
 import styled from 'styled-components';
 
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet"></link>
+
 const Metrica = () => {
   // Datos de ejemplo
   const data = React.useMemo(
@@ -58,9 +60,11 @@ const Metrica = () => {
 };
 
 const MetricaContainer = styled.div`
-  font-family: 'Kodchasan';
+  font-family: 'lato, sans-serif';
   color: white;
   top: 100px;
+  justify-content: center;
+  align-items: center;
 `;
 
 const MetricaTitle = styled.h2`
@@ -72,6 +76,9 @@ const MetricaTitle = styled.h2`
 const MetricaTable = styled.table`
   width: 100%;
   border-collapse: collapse;
+  justify-content: center;
+  align-items: center;
+  background-position: center;
 `;
 
 const MetricaRow = styled.tr`

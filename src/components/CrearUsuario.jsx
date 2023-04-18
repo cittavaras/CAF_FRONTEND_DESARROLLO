@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import '../pages/css/style.css';
 import { useNavigate } from 'react-router-dom';
 
-const CrearAlumno = () => {
+const CrearUsuario = () => {
 
   const navigate = useNavigate();
 
@@ -14,8 +13,8 @@ const CrearAlumno = () => {
   const [correo, setCorreo] = useState('');
   const [carrera, setCarrera] = useState('');
   const [jornada, setJornada] = useState('');
-  const [active, setActive] = useState(false);
-  const [tipoUsuario, setTipoUsuario] = useState('Alumno');
+  const [active, setActive] = useState(true);
+  const [tipoUsuario, setTipoUsuario] = useState('');
 
   useEffect(() => {
     const getAlumnos = async () => {
@@ -45,6 +44,9 @@ const CrearAlumno = () => {
       case 'jornada':
         setJornada(value);
         break;
+      case 'tipoUsuario':
+        setTipoUsuario(value);
+        break;
       default:
         break;
     }
@@ -71,22 +73,8 @@ const CrearAlumno = () => {
       };
 
       await axios.post('https://caf.ivaras.cl/api/alumnos', newAlumno);
-
-      await axios
-        .post('https://caf.ivaras.cl/api/send-email', {
-          to: correo,
-          subject: 'Registro CAF Ivaras',
-          text: `${nombre}: nos es grato saber que estas interesado(a) en nuestros servicios de CAF Ivaras. En los proximos días activaremos tu cuenta y te enviaremos un correo notificandote como acceder a la plataforma y a sus servicios. Atentamente, el equipo de CAF Ivaras`,
-          html: `<strong>${nombre}</strong>: nos es grato saber que estas interesado(a) en nuestros servicios de CAF Ivaras. En los proximos días activaremos tu cuenta y te enviaremos un correo notificandote como acceder a la plataforma y a sus servicios. Atentamente, el equipo de CAF Ivaras`,
-        })
-        .then((response) => {
-          console.log('Email sent successfully:', response.data);
-        })
-        .catch((error) => {
-          console.error('Error sending email:', error);
-        });
-
-      navigate('/notificacion');
+      alert('Usuario creado');
+      navigate('/landing');
     }
   };
 
@@ -102,7 +90,7 @@ const CrearAlumno = () => {
         <Login className='login'>
           <form className="form-horizontal" >
             <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet"></link>
-            <H1>REGISTRO</H1>
+            <H1>REGISTRAR USUARIO</H1>
             <H2>Presiona cada casilla para registrar</H2>
             <div className="form-group">
               <InputN type="text" placeholder="NOMBRE COMPLETO:" name="nombre" onChange={onChangeAlumno} />
@@ -113,34 +101,38 @@ const CrearAlumno = () => {
             </div>
             <div className="form-group">
               <Select className="form-control" name="carrera" onChange={onChangeAlumno}>
-                <option selected disabled={true}> ---Seleccione Su carrera---</option>
-                <option value="Auditoría">Auditoría</option>
-                <option value="Ecoturismo">Ecoturismo</option>
-                <option value="Gastronomía internacional">Gastronomía internacional</option>
-                <option value="Ingeniería en administración">Ingeniería en administración</option>
-                <option value="Ingeniería en infraestructura">Ingeniería en infraestructura</option>
-                <option value="Ingeniería en administración de recursos humanos">Ingeniería en administración de recursos humanos</option>
-                <option value="Ingeniería en marketing">Ingeniería en marketing</option>
-                <option value="Ingeniería en comercio exterior">Ingeniería en comercio exterior</option>
-                <option value="Ingeniería en conectividad y redes">Ingeniería en conectividad y redes</option>
-                <option value="Ingeniería en gestión de tecno">Ingeniería en gestión de tecno</option>
-                <option value="Ingeniería en gestión logística">Ingeniería en gestión logística</option>
-                <option value="Tourism & hospitality">Tourism & hospitality</option>
-                <option value="Turismo y hotelería">Turismo y hotelería</option>
-                <option value="Técnico administración de empresas m/marketing">Técnico administración de empresas m/marketing</option>
-                <option value="Técnico admin. de infraest. y plat. tecnológicas">Técnico admin. de infraest. y plat. tecnológicas</option>
-                <option value="Técnico administración de redes computacionales">Técnico administración de redes computacionales</option>
-                <option value="Técnico administración de recursos humanos">Técnico administración de recursos humanos</option>
-                <option value="Técnico analista programador computacional">Técnico analista programador computacional</option>
-                <option value="Técnico comercio exterior">Técnico comercio exterior</option>
-                <option value="Técnico contabilidad general mención legislación tributaria">Técnico contabilidad general mención legislación tributaria</option>
-                <option value="técnico en administración">técnico en administración</option>
-                <option value="Técnico administración financiera">Técnico administración financiera</option>
-                <option value="Técnico administración de empresas m/logística">Técnico administración de empresas m/logística</option>
-                <option value="Técnico en turismo y hotelería">Técnico en turismo y hotelería</option>
-                <option value="Tourism & hospitality technician">Tourism & hospitality technician</option>
-                <option value="Técnico turismo de aventura">Técnico turismo de aventura</option>
-                <option value="Técnico turismo técnico en empresas turísticas">Técnico turismo técnico en empresas turísticas</option>
+                <option value="a">CARRERA</option>
+                <Select className="form-control" name="carrera" onChange={onChangeAlumno}>
+                  <option selected disabled={true}> ---Seleccione Su carrera---</option>
+                  <option value="Instructor">Instructor de gimnasio</option>
+                  <option value="Auditoría">Auditoría</option>
+                  <option value="Ecoturismo">Ecoturismo</option>
+                  <option value="Gastronomía internacional">Gastronomía internacional</option>
+                  <option value="Ingeniería en administración">Ingeniería en administración</option>
+                  <option value="Ingeniería en infraestructura">Ingeniería en infraestructura</option>
+                  <option value="Ingeniería en administración de recursos humanos">Ingeniería en administración de recursos humanos</option>
+                  <option value="Ingeniería en marketing">Ingeniería en marketing</option>
+                  <option value="Ingeniería en comercio exterior">Ingeniería en comercio exterior</option>
+                  <option value="Ingeniería en conectividad y redes">Ingeniería en conectividad y redes</option>
+                  <option value="Ingeniería en gestión de tecno">Ingeniería en gestión de tecno</option>
+                  <option value="Ingeniería en gestión logística">Ingeniería en gestión logística</option>
+                  <option value="Tourism & hospitality">Tourism & hospitality</option>
+                  <option value="Turismo y hotelería">Turismo y hotelería</option>
+                  <option value="Técnico administración de empresas m/marketing">Técnico administración de empresas m/marketing</option>
+                  <option value="Técnico admin. de infraest. y plat. tecnológicas">Técnico admin. de infraest. y plat. tecnológicas</option>
+                  <option value="Técnico administración de redes computacionales">Técnico administración de redes computacionales</option>
+                  <option value="Técnico administración de recursos humanos">Técnico administración de recursos humanos</option>
+                  <option value="Técnico analista programador computacional">Técnico analista programador computacional</option>
+                  <option value="Técnico comercio exterior">Técnico comercio exterior</option>
+                  <option value="Técnico contabilidad general mención legislación tributaria">Técnico contabilidad general mención legislación tributaria</option>
+                  <option value="técnico en administración">técnico en administración</option>
+                  <option value="Técnico administración financiera">Técnico administración financiera</option>
+                  <option value="Técnico administración de empresas m/logística">Técnico administración de empresas m/logística</option>
+                  <option value="Técnico en turismo y hotelería">Técnico en turismo y hotelería</option>
+                  <option value="Tourism & hospitality technician">Tourism & hospitality technician</option>
+                  <option value="Técnico turismo de aventura">Técnico turismo de aventura</option>
+                  <option value="Técnico turismo técnico en empresas turísticas">Técnico turismo técnico en empresas turísticas</option>
+                </Select>
               </Select>
             </div>
             <div className="form-group">
@@ -150,8 +142,15 @@ const CrearAlumno = () => {
                 <option value="vespertino">Vespertino</option>
               </SelectJ>
             </div>
+            <div className="form-group">
+              <SelectJ className="form-control" name="tipoUsuario" onChange={onChangeAlumno}>
+                <option value="a">CATEGORIA USUARIO</option>
+                <option value="Alumno">Alumno</option>
+                <option value="Instructor">Instructor</option>
+              </SelectJ>
+            </div>
             <Button className="button" onClick={onSubmit}>
-              ENVIAR SOLICITUD
+              CREAR USUARIO
             </Button>
           </form>
         </Login>
@@ -333,4 +332,4 @@ const Button = styled.button`
   }
 `;
 
-export default CrearAlumno;
+export default CrearUsuario;

@@ -26,16 +26,17 @@ const LandingPageAlumno = ({ location }) => {
     // setSelectedEvents([]);
   }
 
-  const getReservasByAlumno = async () => {
+  const getReservasByAlumno = async (fecha = new Date()) => {
     try {
-      const res = await axios.post('https://caf.ivaras.cl/api/reservas/alumno', { rut: alumno.rut });
+      const res = await axios.post('https://caf.ivaras.cl/api/reservas/alumno', { rut: alumno.rut, fecha });
       setReservasAlumno(res?.data ?? []);
     } catch (error) {
       console.log(error);
     }
   }
+
   useEffect(() => {
-    if (alumno != null) {
+    if (alumno != null && hasRole(roles.alumno)) {
       getReservasByAlumno()
     }
   }, [alumno]);
@@ -56,13 +57,16 @@ const LandingPageAlumno = ({ location }) => {
               <Link className='btn' style={{ backgroundColor: '#042945', color: '#FCB32E', fontWeight: 'bold', marginBottom: '10px' }}>Rutina de trabajo</Link>
             </>}
             {hasRole(roles.admin) && <>
-              <button className='btn' style={{ backgroundColor: '#C0D437', color: '#042945', marginRight: '10px', fontWeight: 'bold', marginBottom: '10px' }}>Revisar Bloques</button>
-              <Link className='btn' style={{ backgroundColor: '#E6E7E9', color: '#042945', marginRight: '10px', fontWeight: 'bold', marginBottom: '10px' }}>Crear Usuarios</Link>
-              <Link className='btn' to="/listar" style={{ backgroundColor: '#FCB32E', color: '#042945', marginRight: '10px', fontWeight: 'bold', marginBottom: '10px' }}>Solicitudes Pendientes</Link>
+              <button className='btn' onClick={handleOpen} style={{ backgroundColor: '#C0D437', color: '#042945', marginRight: '10px', fontWeight: 'bold', marginBottom: '10px' }}>Gestionar bloques</button>
+              <Link className='btn' to ="/crearUsuario" style={{ backgroundColor: '#E6E7E9', color: '#042945', marginRight: '10px', fontWeight: 'bold', marginBottom: '10px' }}>Crear Usuarios</Link>
+              <Link className='btn' to="/listar" style={{ backgroundColor: '#FCB32E', color: '#042945', marginRight: '10px', fontWeight: 'bold', marginBottom: '10px' }}>Solicitudes de cuentas de usuarios pendientes</Link>
+            </>}
+            {hasRole(roles.instructor) && <>
+              <Link className='btn' to="/listarActivos" style={{ backgroundColor: '#FCB32E', color: '#042945', marginRight: '10px', fontWeight: 'bold', marginBottom: '10px' }}>Buscar Alumnos</Link>
             </>}
           </div>
         </div>
-        {open && <ReservarSesion open={open} setOpen={setOpen} handleClose={handleClose} reservasAlumno={reservasAlumno} />}                           
+        {open && <ReservarSesion open={open} setOpen={setOpen} handleClose={handleClose} reservasAlumno={reservasAlumno} getReservasByAlumno={getReservasByAlumno} />}                           
       </Div>
 
     </>

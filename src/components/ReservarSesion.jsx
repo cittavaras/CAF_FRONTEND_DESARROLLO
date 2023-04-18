@@ -1,4 +1,5 @@
 import axios from 'axios';
+import styled from 'styled-components';
 import React, { useState, useEffect } from "react";
 import { Button, Dialog, DialogContent, Container, DialogActions, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
@@ -7,8 +8,16 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/es";
 import useAuth from '../auth/useAuth';
-moment.locale("es");
+import roles from '../helpers/roles';
+import AlumnosSesion from './AlumnosSesion'
+import {
+  Stepper,
+  Step,
+  StepLabel,
+} from "@mui/material";
 
+moment.locale("es");
+moment.weekdays(true, 2)
 
 const localizer = momentLocalizer(moment);
 
@@ -19,21 +28,35 @@ const CALENDAR_PARAGRAPH = "Selecciona Mes y Día que deseas agendar para ver lo
 
 const ReservarSesion = (props) => {
 
-  const { alumno } = useAuth();
-
+  const { alumno, hasRole } = useAuth();
   const [selectedEvents, setSelectedEvents] = useState([]);
-
   const [sesiones, setSesiones] = useState([]);
-
   const [eventos, setEventos] = useState([]);
+  const [fechaActual, setFechaActual] = useState(moment().toDate());
+  const [loading, setLoading] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [selectedSesion, setSelectedSesion] = useState(null);
+  const [alumnosSesion, setAlumnosSesion] = useState([]);
+
+  const handleNavigate = (date, view) => {
+    setFechaActual(date);
+    setSelectedEvents([]);
+  };
 
   const getSesiones = async () => {
+    setLoading(true);
+    setEventos([]);
     try {
-      const res = await axios.get('https://caf.ivaras.cl/api/sesiones');
+      const res = await axios.get('https://caf.ivaras.cl/api/sesiones', {
+        params: {
+          fecha: fechaActual
+        }
+      });
       setSesiones(res?.data ?? []);
     } catch (error) {
       console.log(error);
     }
+    setLoading(false);
   }
 
   const crearReservas = async (e) => {
@@ -53,25 +76,30 @@ const ReservarSesion = (props) => {
   }
 
   useEffect(() => {
-    getSesiones()
-    if (props.reservasAlumno) {
+    getSesiones();
+    if (hasRole(roles.alumno)) {
+      props.getReservasByAlumno(fechaActual)
+    };
+  }, [fechaActual]);
 
+  useEffect(() => {
+    if (props.reservasAlumno && hasRole(roles.alumno)) {
       const sesionesAlumno = props.reservasAlumno.map(r => {
         return {
-          ...r.sesion [0], count:0
+          ...r.sesion[0], count: 0
         }
       }
       )
-        setSelectedEvents(generateTrainingEvents(sesionesAlumno))
-      }
-  }, []);
+      setSelectedEvents(generateTrainingEvents(sesionesAlumno, fechaActual))
+    }
+  }, [props.reservasAlumno]);
 
   useEffect(() => {
     if (sesiones.length > 0) {
-      const generatedEvents = generateTrainingEvents(sesiones)
+      const generatedEvents = generateTrainingEvents(sesiones, fechaActual)
       setEventos(generatedEvents);
     }
-  }, [sesiones]);
+  }, [sesiones, fechaActual]);
 
   useEffect(() => {
     if (props.open === false) {
@@ -79,10 +107,19 @@ const ReservarSesion = (props) => {
     }
   }, [props.open]);
 
+  useEffect(() => {
+    if (selectedSesion != null) {
+      getAlumnosByNumeroSesion()
+    }
+  }, [selectedSesion]);
+
   const eventStyleGetter = (event) => {
+    const fechaActual = moment();
+    const sesionPasada = moment(event.start).isBefore(fechaActual)
+    const colorSesion = sesionPasada ? "green" : "yellow"
     const isSelected = selectedEvents.map(e => e.id).includes(event.id);
     const style = {
-      backgroundColor: isSelected ? "yellow" : "#2980b9",
+      backgroundColor: isSelected ? colorSesion : "#2980b9",
       borderRadius: "0",
       opacity: 1,
       display: "block",
@@ -95,7 +132,7 @@ const ReservarSesion = (props) => {
           variant="contained"
           color={isSelected ? "secondary" : "primary"}
           onClick={() => handleEventClick(event)}
-          disabled={!event?.isValid}
+          disabled={!event?.isValid || sesionPasada}
         >
           {event.title}
         </Button>
@@ -104,40 +141,60 @@ const ReservarSesion = (props) => {
   };
 
   const handleEventClick = (event) => {
-    if (!event.isValid) {
-      return;
-    }
-    if(selectedEvents.some(selected => selected.dia === event.dia && selected.id !== event.id ))
-    {
-      alert('Solo puedes reservar 1 sesion por día');
-      return;
-    }
-    const maxSelections = 3;
-    if (
-      selectedEvents.length < maxSelections ||
-      selectedEvents.map(e => e.id).includes(event.id)
-    ) {
-      setSelectedEvents((prevState) => {
-        if (prevState.map(e => e.id).includes(event.id)) {
-          return prevState.filter((e) => e.id !== event.id);
-        } else {
-          return [...prevState, event];
-        }
-      });
-    } else {
-      alert(`¡Solo se permiten seleccionar hasta ${maxSelections} eventos!`);
+    if (hasRole(roles.alumno)) {
+      const fechaActual = moment();
+      if (!event.isValid) {
+        return;
+      }
+      if (moment(event.start).isBefore(fechaActual)) {
+        alert('No puedes seleccionar un evento pasado');
+        return;
+      }
+      if (selectedEvents.some(selected => selected.dia === event.dia && selected.id !== event.id)) {
+        alert('Solo puedes reservar 1 sesion por día');
+        return;
+      }
+      const maxSelections = 3;
+      if (
+        selectedEvents.length < maxSelections ||
+        selectedEvents.map(e => e.id).includes(event.id)
+      ) {
+        setSelectedEvents((prevState) => {
+          if (prevState.map(e => e.id).includes(event.id)) {
+            return prevState.filter((e) => e.id !== event.id);
+          } else {
+            return [...prevState, event];
+          }
+        });
+      } else {
+        alert(`¡Solo se permiten seleccionar hasta ${maxSelections} eventos!`);
+      }
+    } else if (hasRole(roles.admin)) {
+      setActiveStep(1);
+      setSelectedSesion(event);
     }
   };
 
+  const handleBackClick = () => {
+    setActiveStep(0);
+    setSelectedSesion(null);
+    setAlumnosSesion([]);
+  };
 
-
-
-
-
+  const getAlumnosByNumeroSesion = async () => {
+    try {
+      console.log('selectedSesion', selectedSesion)
+      const res = await axios.get(`https://caf.ivaras.cl/api/sesiones/${selectedSesion.id}/alumnos`);
+      setAlumnosSesion(res?.data ?? []);
+      console.log('res', res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <Container maxWidth="lg" style={{ marginTop: '70px' }}>
-      {props.open && <Dialog open={props.open} onClose={props.handleClose} fullWidth maxWidth="md">
+      {props.open && <Dialog open={props.open} onClose={props.handleClose} fullWidth maxWidth="md" scroll={'paper'}>
         <DialogTitle sx={{ m: 0, p: 2 }} style={{ marginTop: "5px", marginBottom: "20px" }}>
           <IconButton
             style={{ marginTop: "5px", marginBottom: "5px" }}
@@ -157,37 +214,65 @@ const ReservarSesion = (props) => {
         <DialogContent>
           <Typography variant="h5" component="h2">{CALENDAR_TITLE}</Typography>
           <Typography variant="body1" component="p">{CALENDAR_PARAGRAPH}</Typography>
-          <Calendar
-            localizer={localizer}
-            events={eventos}
-            startAccessor="start"
-            endAccessor="end"
-            defaultView="week"
-            views={["week"]}
-            toolbar={false}
-            selectable={false}
-            onSelectEvent={handleEventClick}
-            eventPropGetter={eventStyleGetter}
-            min={new Date(0, 0, 0, 8, 10)}
-            max={new Date(0, 0, 0, 19, 0)}
-          />
+          {hasRole(roles.admin) &&
+            <Stepper activeStep={activeStep} alternativeLabel>
+              <Step>
+                <StepLabel>Selector</StepLabel>
+              </Step>
+              <Step>
+                <StepLabel>Detalle</StepLabel>
+              </Step>
+            </Stepper>
+          }
+          {activeStep === 0 && (
+            <CustomCalendar
+              localizer={localizer}
+              events={eventos}
+              startAccessor="start"
+              endAccessor="end"
+              defaultView="week"
+              views={["week"]}
+              selectable={false}
+              onSelectEvent={handleEventClick}
+              eventPropGetter={eventStyleGetter}
+              min={new Date(0, 0, 0, 9, 0)}
+              max={new Date(0, 0, 0, 22, 0)}
+              date={fechaActual}
+              onNavigate={handleNavigate}
+              disabled={loading}
+            />
+          )}
+          {activeStep === 1 && (
+            <>
+              <AlumnosSesion alumnosSesion={alumnosSesion}/>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleBackClick}
+              >
+                Regresar
+              </Button>
+            </>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button autoFocus color="success" variant="contained" disabled={selectedEvents.length < 1} onClick={crearReservas}>
-            Confirmar reserva
-          </Button>
+          {hasRole(roles.alumno) &&
+            <Button autoFocus color="success" variant="contained" onClick={crearReservas}>
+              Confirmar reserva
+            </Button>
+          }
         </DialogActions>
       </Dialog>}
     </Container>
   );
 };
 
-const generateTrainingEvents = (sesiones = []) => {
+const generateTrainingEvents = (sesiones = [], fechaActual) => {
   const newSesiones = sesiones.map(sesion => {
     let [hours, minutes] = sesion.horaIni.split(":");
-    const start = moment().day(sesion.dia).set({ hours, minutes }).toDate();
+    const start = moment(fechaActual).day(sesion.dia).set({ hours, minutes }).toDate();
     [hours, minutes] = sesion.horaFin.split(":");
-    const end = moment().day(sesion.dia).set({ hours, minutes }).toDate();
+    const end = moment(fechaActual).day(sesion.dia).set({ hours, minutes }).toDate();
     const newSesion = {
       id: sesion.numeroSesion,
       title: `Entrenamiento ${sesion.numeroSesion} ${sesion?.count}/${sesion?.cantidadUsuarios}`,
@@ -195,11 +280,17 @@ const generateTrainingEvents = (sesiones = []) => {
       end,
       isValid: sesion.count < sesion.cantidadUsuarios,
       dia: sesion.dia,
+      cantidadUsuarios: sesion.cantidadUsuarios
     };
     return newSesion;
   })
   return newSesiones;
 };
 
+const CustomCalendar = styled(Calendar)`
+  .rbc-calendar {
+    min-height: 120vh;
+  }
+`;
 
 export default ReservarSesion;

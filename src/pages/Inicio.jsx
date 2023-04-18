@@ -14,6 +14,12 @@ const Div = styled.div`
   flex-direction: column;
 `;
 
+const QrCodeContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Qr = () => {
   return (
     <Div className='container mx-auto' id="inicio">
@@ -21,9 +27,9 @@ const Qr = () => {
         <h1>Visita nuestro gimnasio</h1>
         <p>Escanea el código de abajo para acceder a nuestro sitio web desde tu dispositivo</p>
       </div>
-      <div className='qr-code-container'>
+      <QrCodeContainer className='qr-code-container'>
         <img src={qr} alt="Imagen QR" className="img-fluid w-50" style={{ marginBottom: "20px" }} />
-      </div>
+      </QrCodeContainer>
     </Div>
   );
 };

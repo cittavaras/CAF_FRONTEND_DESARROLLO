@@ -31,39 +31,38 @@ const Login = () => {
   const validacion = async (e) => {
     e.preventDefault();
 
-    if (!alumno || !contraseña) {  
+    if (!alumno || !contraseña) {
       alert('Debe ingresar todos los campos');
       return;
     }
-    else if (validarCorreoElectronico(alumno)  !== true) {
+    else if (validarCorreoElectronico(alumno) !== true) {
       alert('El correo debe ser de duoc');
       return;
     }
     else {
-      const res = await axios.post(`https://caf.ivaras.cl/api/alumnos/login`, {correo: alumno, password: contraseña});
+      const res = await axios.post(`https://caf.ivaras.cl/api/alumnos/login`, { correo: alumno, password: contraseña });
       console.log(res);
       try {
         const usuario = res?.data?.respAlumno
-        if (!!usuario) {
-          login(usuario);
+        if (!!usuario && res.data.success) {
           console.log('usuario', usuario);
+          login(usuario);
           if (usuario.tipoUsuario === 'Admin') {
             alert('Bienvenido administrador');
-            navigate('/admin');
+            navigate('/landing');
           }
           else if (usuario.tipoUsuario === 'Alumno') {
             alert('Bienvenido alumno');
             navigate('/landing');
           }
           else {
-
             alert('Bienvenido Instructor');
           }
         }
-        else {
+        else  {
           alert('El usuario o contraseña es incorrecto')
         }
-      }
+      }      
       catch (error) {
         console.log(error);
         alert('Ocurrió un error al iniciar sesión')
@@ -73,7 +72,7 @@ const Login = () => {
   }
 
   return (
-    
+
     <OuterContainer>
       <div className="vector-1" />
       <div className="vector-2" />
@@ -91,9 +90,9 @@ const Login = () => {
               <div style={{ textAlign: 'center', marginTop: '20px' }}>
                 <Link to="/registro" style={{ borderBottom: '1px solid #FFF', color: '#FFF', textDecoration: 'none' }}>¿No tienes cuenta? Puedes crearte una aquí</Link></div>
             </Form>
-          </Login0>  
+          </Login0>
         </Wrapper>
-      </Container>    
+      </Container>
     </ OuterContainer>
   );
 }
@@ -111,6 +110,7 @@ const OuterContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-image: url(../img/gym-draw-8.png) ;
 
 
 `;
