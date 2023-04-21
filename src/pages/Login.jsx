@@ -24,9 +24,9 @@ const Login = () => {
   }
 
   const validarCorreoElectronico = (correo) => {
-    const expresionRegular = /^[a-zA-Z0-9._%+-]+@(duocuc\.cl|duoc\.profesor\.cl)$/;
+    const expresionRegular = /^[a-zA-Z0-9._%+-]+@(duocuc\.cl|profesor\.duoc\.cl|duoc\.cl)$/;
     return expresionRegular.test(correo);
-  }
+  };
 
   const validacion = async (e) => {
     e.preventDefault();

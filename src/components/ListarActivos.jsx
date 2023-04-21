@@ -7,6 +7,7 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import Container from '@mui/material/Container';
+import RegistroMetricas from './RegistroMetricas';
 
 
 
@@ -17,6 +18,23 @@ const ListarActivos = () => {
   const [porPagina, setPorPagina] = useState(5);
   const [totalCount, setTotalCount] = useState(0);
   const [search, setSearch] = useState('');
+  const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(null);
+
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = (e, al) => {
+    e.preventDefault();
+    setAlumnoSeleccionado(al)
+    setOpen(true)
+
+  };
+  const handleClose = () => {
+    setAlumnoSeleccionado(null);
+    setOpen(false);
+    // setSelectedEvents([]);
+  }
+
 
 
   useEffect(() => {
@@ -46,7 +64,7 @@ const ListarActivos = () => {
     // const res = await axios.put(`https://caf.ivaras.cl/api/alumnos/${id}`, { active: true });
     // const { correo, nombre } = res.data;
     await axios
-      .post('https://caf.ivaras.cl/api/alumnos', {rut: search, })
+      .post('https://caf.ivaras.cl/api/alumnos', { rut: search, })
       .then((response) => {
         console.log('Email sent successfully:', response.data);
       })
@@ -60,6 +78,38 @@ const ListarActivos = () => {
     getAlumnos();
   }
 
+  const registrarMetricas = async (e, metricas) => {
+    e.preventDefault();
+    const {
+      edad,
+      imc,
+      grasaVisceral,
+      altura,
+      porcentajeGrasaCorporal,
+      peso,
+      porcentajeGrasaMuscular,
+      rut
+    } = metricas
+
+
+    if(!edad || !imc || !grasaVisceral || !altura || !porcentajeGrasaCorporal || !peso || !porcentajeGrasaMuscular){
+      alert('Debe completar todos los campos');
+      return;
+    }
+    else {
+      console.log('metricas',metricas);
+      
+      // const res = await axios.post(`https://caf.ivaras.cl/api/alumnos/${alumnoSeleccionado._id}`);
+      await axios.post(`https://caf.ivaras.cl/api/metricas/`, metricas);
+      alert('Metricas registradas');
+      handleClose();
+    }
+
+    getAlumnos();
+
+  }
+
+
   const handleInputValue = (e) => {
     setSearch(e.target.value);
   }
@@ -67,8 +117,22 @@ const ListarActivos = () => {
   // Filtrar por rut
   const filtrarAlumnos = async (e) => {
     e.preventDefault();
-    const res = await axios.post(`https://caf.ivaras.cl/api/alumnos/rut`, {rut: search });
-    console.log(res);
+    const res = await axios.get('https://caf.ivaras.cl/api/alumnos');
+    const alumno = res.data.alumnos.filter(alumno => alumno.tipoUsuario === 'Alumno' && alumno.rut === search);
+    if (!search) {
+      alert('Ingrese un rut');
+      getAlumnos();
+      return;
+    }
+    else if (alumno && alumno.length > 0) {
+      alert('Alumno encontrado');
+      setAlumnos(alumno);
+    }
+    else {
+      alert('Alumno no encontrado');
+      getAlumnos();
+      return;
+    }
   }
 
   // Función para manejar el cambio de página
@@ -101,14 +165,14 @@ const ListarActivos = () => {
           <Div className="row">
             {
               alumnos.map(alumno => (
-                <div className="col-md4 p-2" key={alumno._id}>
+                <Card className="col-md-4 p-2" key={alumno._id}>
                   <div className="card">
 
                     <div className="card-header d-flex justify-content-between">
                       <h3>{alumno.nombre}</h3>
                       {/* <button type='button' className="btn btn-secondary" onClick={() => { aceptarAlumno(alumno._id) }}> */}
-                      <button type='button' className="btn btn-secondary" >
-                        Actualizar  Metricas Alumno
+                      <button type='button' className="btn btn-secondary" onClick={(e) => { handleOpen(e, alumno) }}>
+                        Registrar metricas alumno
                       </button>
                     </div>
                     <div className="card-body">
@@ -120,8 +184,10 @@ const ListarActivos = () => {
 
                     </div>
                   </div>
-
-                </div>
+                  {open && <RegistroMetricas open={open} setOpen={setOpen} handleClose={handleClose} registrarMetricas={registrarMetricas} alumnoSeleccionado={alumnoSeleccionado}
+                  />
+                  }
+                </Card>
               ))
             }
           </Div>
@@ -146,6 +212,25 @@ const ListarActivos = () => {
     </>
   );
 };
+
+const Card = styled.div`
+  width: 500px; // Tamaño fijo de la tarjeta
+  height: 300px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 768px) { // Media query para pantallas más pequeñas
+    width: 100%; // La tarjeta ocupa el ancho completo de la pantalla
+    height: auto; // La altura se ajusta automáticamente al contenido
+    margin: 10px 0; // Se quita el margen horizontal y se agrega un margen vertical
+  }
+`;
 
 const DivT = styled.div`
   font-family: 'Kodchasan';

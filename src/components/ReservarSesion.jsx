@@ -141,6 +141,7 @@ const ReservarSesion = (props) => {
   };
 
   const handleEventClick = (event) => {
+    console.log(event.cantidadUsuarios);
     if (hasRole(roles.alumno)) {
       const fechaActual = moment();
       if (!event.isValid) {
@@ -170,6 +171,10 @@ const ReservarSesion = (props) => {
         alert(`¡Solo se permiten seleccionar hasta ${maxSelections} eventos!`);
       }
     } else if (hasRole(roles.admin)) {
+      if (event.cantidadUsuarios <= 0) {
+        alert('No se puede hacer clic en una sesión sin alumnos');
+        return;
+      }
       setActiveStep(1);
       setSelectedSesion(event);
     }
@@ -280,7 +285,7 @@ const generateTrainingEvents = (sesiones = [], fechaActual) => {
       end,
       isValid: sesion.count < sesion.cantidadUsuarios,
       dia: sesion.dia,
-      cantidadUsuarios: sesion.cantidadUsuarios
+      cantidadUsuarios: sesion.count
     };
     return newSesion;
   })

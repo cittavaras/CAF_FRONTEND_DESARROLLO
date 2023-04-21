@@ -50,6 +50,15 @@ const CrearAlumno = () => {
     }
   };
 
+  const formatearRut = () => {
+    console.log(rut)
+    const rutSinFormatear = rut.replace(/\./g, "").replace("-", "");
+    const dv = rutSinFormatear.slice(-1);
+    const rutNum = rutSinFormatear.slice(0, -1);
+    const rutFormateado = rutNum.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "-" + dv;
+    setRut(rutFormateado);
+  }
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -90,8 +99,9 @@ const CrearAlumno = () => {
     }
   };
 
+
   const validarCorreoElectronico = (correo) => {
-    const expresionRegular = /^[a-zA-Z0-9._%+-]+@(duocuc\.cl|duoc\.profesor\.cl)$/;
+    const expresionRegular = /^[a-zA-Z0-9._%+-]+@(duocuc\.cl|profesor\.duoc\.cl|duoc\.cl)$/;
     return expresionRegular.test(correo);
   };
 
@@ -108,7 +118,7 @@ const CrearAlumno = () => {
               <InputN type="text" placeholder="NOMBRE COMPLETO:" name="nombre" onChange={onChangeAlumno} />
             </div>
             <div className="form-group">
-              <InputR type="text" placeholder="RUT:" name="rut" onChange={onChangeAlumno} />
+              <InputR type="text" placeholder="RUT:" name="rut" value={rut} pattern="^(\d{1,2}\.)?\d{3}\.\d{3}-[0-9kK]$" onBlur={formatearRut} onChange={onChangeAlumno} />
               <InputCorreo type="mail" placeholder="CORREO DUOC:" name="correo" onChange={onChangeAlumno} />
             </div>
             <div className="form-group">
@@ -145,7 +155,7 @@ const CrearAlumno = () => {
             </div>
             <div className="form-group">
               <SelectJ className="form-control" name="jornada" onChange={onChangeAlumno}>
-                <option value="a">JORNADA</option>
+                <option selected disabled={true}>JORNADA</option>
                 <option value="diurno">Diurno</option>
                 <option value="vespertino">Vespertino</option>
               </SelectJ>

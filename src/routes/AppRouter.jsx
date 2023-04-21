@@ -74,7 +74,7 @@ export default function AppRouter() {
             <PublicRoute>
               <Calendario />
             </PublicRoute>}
-          />
+          /> 
 
           {/* Rutas privadas */}
           {/* TODO: Arreglar esta ruta desde el admin y colocando la ruta desde el navegador no se deberia mostrar */}
