@@ -4,7 +4,6 @@ import styled from "styled-components";
 import useAuth from '../auth/useAuth';
 import roles from "../helpers/roles";
 
-
 const Navigation = () => {
 
     const navigate = useNavigate();
@@ -38,11 +37,14 @@ const Navigation = () => {
                                 </>}
                                 {hasRole(roles.admin) && <>
                                 </>}
-                                {isLogged() &&
+                                {isLogged() && <>
+                                    <LI1 className="nav-item">
+                                        <Link className="nav-link" to="/configuracion">Configuracion</Link>
+                                    </LI1>
                                     <LI className="nav-item">
                                         <Link className="nav-link" onClick={handleLogout}>Cerrar sesion</Link>
                                     </LI>
-                                }
+                                </>}
                             </ul>
                         </div>
                     </div>
@@ -55,6 +57,10 @@ const Navigation = () => {
 const LI = styled.li`
     margin-left: auto;
     right: 0;
+`;
+
+const LI1 = styled.li`
+    margin-left: auto;
 `;
 
 export default Navigation;

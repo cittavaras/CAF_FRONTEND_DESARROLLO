@@ -57,6 +57,7 @@ const Login = () => {
           }
           else {
             alert('Bienvenido Instructor');
+            navigate('/landing');
           }
         }
         else  {

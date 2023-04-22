@@ -26,6 +26,9 @@ export default function AuthProvider({ children }) {
                 nombre: userCredentials?.nombre,
                 correo: userCredentials?.correo,
                 rut: userCredentials?.rut,
+                carrera: userCredentials?.carrera,
+                jornada: userCredentials?.jornada,
+                password: userCredentials?.password
             }
             setAlumno(newAlumno)
             sessionStorage.setItem("alumno_sesion", JSON.stringify(newAlumno));

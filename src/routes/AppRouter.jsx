@@ -25,6 +25,7 @@ import roles from '../helpers/roles';
 import routes from '../helpers/routes';
 import CrearUsuario from "../components/CrearUsuario";
 import ListarActivos from "../components/ListarActivos";
+import Configuracion from "../components/Configuracion";
 
 import Calendario from "../pages/calendario";
 
@@ -91,6 +92,11 @@ export default function AppRouter() {
           <Route path="/metrica" element={
             <PrivateRoute >
               <MetricaAlumno />
+            </PrivateRoute>}
+          />
+          <Route path="/configuracion" element={
+            <PrivateRoute >
+              <Configuracion />
             </PrivateRoute>}
           />
           <Route path="/listar" element={

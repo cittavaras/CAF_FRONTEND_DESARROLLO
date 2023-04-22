@@ -1,7 +1,7 @@
-import axios from 'axios';
+ import axios from 'axios';
 import styled from 'styled-components';
 import React, { useState, useEffect } from "react";
-import { Button, Dialog, DialogContent, Container, DialogActions, DialogTitle, IconButton, Typography } from "@mui/material";
+import { Button, Dialog, DialogContent, Container, DialogActions, DialogTitle, IconButton, Typography, Box } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -9,7 +9,10 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/es";
 import useAuth from '../auth/useAuth';
 import roles from '../helpers/roles';
-import AlumnosSesion from './AlumnosSesion'
+
+import { withResizeDetector } from 'react-resize-detector';
+
+import AlumnosSesion from "./AlumnosSesion";
 import {
   Stepper,
   Step,
@@ -21,10 +24,41 @@ moment.weekdays(true, 2)
 
 const localizer = momentLocalizer(moment);
 
+const messages = {
+  today: 'hoy',
+  next: 'siguiente',
+  previous: 'anterior',
+};
+
 const alumno_sesion = JSON.parse(sessionStorage.getItem("alumno_sesion"));
 
-const CALENDAR_TITLE = "AGENDA TU RESERVA";
-const CALENDAR_PARAGRAPH = "Selecciona Mes y Día que deseas agendar para ver los bloques disponibles. Luego selecciona el bloque que deseas reservar. Recuerda que solo puedes reservar 3 bloques por día.";
+
+const CALENDAR_TITLE = "Reserva tu Entrenamiento";
+const CALENDAR_PARAGRAPH = "Selecciona Mes y Día que deseas agendar para ver los bloques disponibles. Luego selecciona el bloque que deseas reservar. Recuerda que solo puedes reservar 3 bloques por semana.";
+
+const StyledDialogTitle = styled(DialogTitle)`
+  margin-top: 5px;
+  margin-bottom: 20px;
+`;
+
+const StyledIconButton = styled(IconButton)`
+  margin-top: 5px;
+  margin-bottom: 5px;
+`;
+
+const TitleContainer = styled(Box)`
+  text-align: center;
+  margin-bottom: 16px;
+`;
+
+const CalendarTitle = styled(Typography)`
+  font-weight: bold;
+`;
+
+const CalendarParagraph = styled(Typography)`
+  margin-bottom: 24px;
+`;
+
 
 const ReservarSesion = (props) => {
 
@@ -114,6 +148,7 @@ const ReservarSesion = (props) => {
   }, [selectedSesion]);
 
   const eventStyleGetter = (event) => {
+    const fontSize = props.width < 400 ? "0.8em" : "1em";
     const fechaActual = moment();
     const sesionPasada = moment(event.start).isBefore(fechaActual)
     const colorSesion = sesionPasada ? "green" : "yellow"
@@ -125,19 +160,27 @@ const ReservarSesion = (props) => {
       display: "block",
     };
     style.backgroundColor = event.isValid ? style.backgroundColor : "#676d70";
-    return {
-      style,
-      children: (
-        <Button
-          variant="contained"
-          color={isSelected ? "secondary" : "primary"}
-          onClick={() => handleEventClick(event)}
-          disabled={!event?.isValid || sesionPasada}
-        >
-          {event.title}
-        </Button>
-      )
-    };
+      return {
+    style,
+    children: (
+      <Button
+        variant="contained"
+        color={isSelected ? "secondary" : "primary"}
+        onClick={() => handleEventClick(event)}
+        disabled={!event?.isValid || sesionPasada}
+        style={{
+          fontSize: fontSize,
+          fontFamily: "Roboto, sans-serif",
+          fontWeight: 500,
+          textTransform: "none",
+          padding: "4px 8px",
+        }}
+      >
+        {event.title} 
+      </Button>
+    )
+  };
+
   };
 
   const handleEventClick = (event) => {
@@ -197,28 +240,29 @@ const ReservarSesion = (props) => {
     }
   }
 
-  return (
-    <Container maxWidth="lg" style={{ marginTop: '70px' }}>
-      {props.open && <Dialog open={props.open} onClose={props.handleClose} fullWidth maxWidth="md" scroll={'paper'}>
-        <DialogTitle sx={{ m: 0, p: 2 }} style={{ marginTop: "5px", marginBottom: "20px" }}>
-          <IconButton
-            style={{ marginTop: "5px", marginBottom: "5px" }}
-            aria-label="close"
-            onClick={props.handleClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
+return (
+  <Container maxWidth="lg" style={{ marginTop: '70px' }}>
+    {props.open && <Dialog open={props.open} onClose={props.handleClose} fullWidth maxWidth="md" scroll={'paper'}>
+      <StyledDialogTitle sx={{ m: 0, p: 2 }}>
+        <StyledIconButton
+          aria-label="close"
+          onClick={props.handleClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </StyledIconButton>
+      </StyledDialogTitle>
 
-        <DialogContent>
-          <Typography variant="h5" component="h2">{CALENDAR_TITLE}</Typography>
-          <Typography variant="body1" component="p">{CALENDAR_PARAGRAPH}</Typography>
+      <DialogContent>
+        <TitleContainer>
+          <CalendarTitle variant="h4" component="h2">{CALENDAR_TITLE}</CalendarTitle>
+        </TitleContainer>
+        <CalendarParagraph variant="body1" component="p">{CALENDAR_PARAGRAPH}</CalendarParagraph>
           {hasRole(roles.admin) &&
             <Stepper activeStep={activeStep} alternativeLabel>
               <Step>
@@ -240,11 +284,12 @@ const ReservarSesion = (props) => {
               selectable={false}
               onSelectEvent={handleEventClick}
               eventPropGetter={eventStyleGetter}
-              min={new Date(0, 0, 0, 9, 0)}
+              min={new Date(0, 0, 0, 8, 0)}
               max={new Date(0, 0, 0, 22, 0)}
               date={fechaActual}
               onNavigate={handleNavigate}
               disabled={loading}
+              messages={ messages }
             />
           )}
           {activeStep === 1 && (
@@ -272,6 +317,7 @@ const ReservarSesion = (props) => {
   );
 };
 
+
 const generateTrainingEvents = (sesiones = [], fechaActual) => {
   const newSesiones = sesiones.map(sesion => {
     let [hours, minutes] = sesion.horaIni.split(":");
@@ -296,6 +342,61 @@ const CustomCalendar = styled(Calendar)`
   .rbc-calendar {
     min-height: 120vh;
   }
+
+  .rbc-toolbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .rbc-toolbar button {
+    color: #000;
+    background-color: transparent;
+    border: none;
+  }
+
+  .rbc-toolbar button:hover {
+    color: #2980b9;
+    background-color: transparent;
+  }
+
+  .rbc-header {
+    background-color: #ffffff;
+    color: #000;
+    font-weight: bold;
+    padding: 10px 0;
+  }
+
+  .rbc-time-view {
+    background-color: #f5f5f5;
+  }
+
+  .rbc-timeslot-group {
+    border-color: #e0e0e0;
+  }
+
+  .rbc-time-view .rbc-day-bg.rbc-today {
+    background-color: #e0e0e0;
+  }
+
+  .rbc-event {
+    background-color: #2980b9;
+    border-radius: 4px;
+    color: #fff;
+    border: none;
+    font-weight: normal;
+    padding: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .rbc-event:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .rbc-event-label {
+    font-weight: normal;
+    font-size: 0.8em;
+  }
 `;
 
-export default ReservarSesion;
+
+export default withResizeDetector(ReservarSesion);

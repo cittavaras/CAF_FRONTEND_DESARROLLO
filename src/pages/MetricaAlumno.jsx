@@ -1,18 +1,57 @@
 import React from 'react';
 import { useTable } from 'react-table';
 import styled from 'styled-components';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet"></link>
 
 const Metrica = () => {
+  const [metricas, setMetricas] = useState([]);
+  useEffect(() => {
+
+    MetricasAlumno();
+
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(metricas);
+  // }, [metricas]);
+
+  const MetricasAlumno = async () => {
+    // const datosSesion = sessionStorage.getItem("alumno_sesion");
+    const {rut} = JSON.parse(sessionStorage.getItem('alumno_sesion'));  
+    const res = await axios.post('https://caf.ivaras.cl/api/metricas/alumno', { rut });
+    const metricaAlumno = res.data;
+    setMetricas(metricaAlumno);
+  }
+
+  
+
   // Datos de ejemplo
   const data = React.useMemo(
-    () => [      {        metrica: 'Edad',        valor: '27 años'      },      {        metrica: 'Altura',        valor: '170 cm'      },      {        metrica: 'Peso corporal',        valor: '70 kg'      },      {        metrica: 'Porcentaje de grasa corporal',        valor: '20%'      },      {        metrica: 'Porcentaje de músculo',        valor: '40%'      },      {        metrica: 'Índice de masa corporal (IMC)',        valor: '24.2'      },      {        metrica: 'Grasa visceral',        valor: '10'      }    ],
-    []
+    () => {
+      if (metricas) {
+        return [
+          { metrica: 'Edad', valor: `${metricas?.edad}` },
+          { metrica: 'Altura', valor: `${metricas?.altura}` },
+          { metrica: 'Peso corporal', valor: `${metricas?.peso}` },
+          { metrica: 'Porcentaje de grasa corporal', valor: `${metricas?.porcentajeGrasaCorporal}` },
+          { metrica: 'Porcentaje de músculo', valor: `${metricas?.porcentajeGrasaMuscular}` },
+          { metrica: 'Índice de masa corporal (IMC)', valor: `${metricas?.imc}` },
+          { metrica: 'Grasa visceral', valor: `${metricas?.grasaVisceral}`}
+        ];
+      } else {
+        return [];
+      }
+    },
+    [metricas]
   );
+  
 
   const columns = React.useMemo(
-    () => [      {        Header: 'Métricas de seguimiento del alumno',        accessor: 'metrica'      },      {        Header: 'Valor',        accessor: 'valor'      }    ],
+    () => [{ Header: 'Métricas de seguimiento del alumno', accessor: 'metrica' },
+    { Header: 'Valor', accessor: 'valor' }],
     []
   );
 
