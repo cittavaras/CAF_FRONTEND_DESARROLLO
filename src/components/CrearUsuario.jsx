@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import BotonesPerfil from './BotonesPerfil';
 
 const CrearUsuario = () => {
 
@@ -92,10 +93,11 @@ const CrearUsuario = () => {
     setRut(rutFormateado);
   }
 
-  return (
+  return ( 
+    
     <OuterContainer>
-
       <Container>
+      <BotonesPerfil/>
         <Login className='login'>
           <form className="form-horizontal" >
             <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet"></link>
@@ -164,12 +166,14 @@ const CrearUsuario = () => {
       </Container>
       <div className="vector1right" />
     </OuterContainer>
+    
   )
 }
 
 
 const OuterContainer = styled.div`
   display: flex;
+  margin-top: 70px;
 /*   justify-content: center; */
 /*   align-items: center; */
 /*   height: 100vh; */
@@ -197,7 +201,6 @@ const Container = styled.div`
 `;
 
 const Login = styled.div`
-margin-top: 100px;
 display: flex;
 justify-content: center;
 align-items: center;

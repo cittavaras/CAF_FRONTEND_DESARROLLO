@@ -8,9 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import Container from '@mui/material/Container';
 import RegistroMetricas from './RegistroMetricas';
-
-
-
+import BotonesPerfil from './BotonesPerfil';
 
 const ListarActivos = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -88,19 +86,18 @@ const ListarActivos = () => {
       porcentajeGrasaCorporal,
       peso,
       porcentajeGrasaMuscular,
-      rut
+      rut,
     } = metricas
 
 
-    if(!edad || !imc || !grasaVisceral || !altura || !porcentajeGrasaCorporal || !peso || !porcentajeGrasaMuscular){
+    if (!edad || !imc || !grasaVisceral || !altura || !porcentajeGrasaCorporal || !peso || !porcentajeGrasaMuscular) {
       alert('Debe completar todos los campos');
       return;
     }
     else {
-      console.log('metricas',metricas);
-      
       // const res = await axios.post(`https://caf.ivaras.cl/api/alumnos/${alumnoSeleccionado._id}`);
       await axios.post(`https://caf.ivaras.cl/api/metricas/`, metricas);
+      console.log(metricas);
       alert('Metricas registradas');
       handleClose();
     }
@@ -144,52 +141,53 @@ const ListarActivos = () => {
     <>
       <Container maxWidth="md">
         <DivT>
-
-
-          <h2>
-            <Paper
-              component="form"
-              sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
-            >
-              <InputBase
-                sx={{ ml: 1, flex: 1 }}
-                placeholder="Ingrese el rut del alumno ej: 12345678-9"
-                inputProps={{ 'aria-label': 'Ingrese el rut del alumno' }}
-                onChange={handleInputValue}
-                value={search} />
-              <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={filtrarAlumnos}>
-                <SearchIcon />
-              </IconButton>
-            </Paper>
-          </h2>
+        <BotonesPerfil/>
           <Div className="row">
-            {
-              alumnos.map(alumno => (
-                <Card className="col-md-4 p-2" key={alumno._id}>
-                  <div className="card">
+            <TarjetaContainer>
+              <h2>
+                <Paper
+                  component="form"
+                  sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder="Ingrese el rut del alumno ej: 12.345.678-9"
+                    inputProps={{ 'aria-label': 'Ingrese el rut del alumno' }}
+                    onChange={handleInputValue}
+                    value={search} />
+                  <button className='btn btn-dark' type="button" sx={{ p: '10px' }} aria-label="search" onClick={filtrarAlumnos}>
+                    <SearchIcon />
+                  </button>
+                </Paper>
+              </h2>
+              {
+                alumnos.map(alumno => (
+                  <Card className="col-md-4 p-2" key={alumno._id}>
+                    <div className="card">
 
-                    <div className="card-header d-flex justify-content-between">
-                      <h3>{alumno.nombre}</h3>
-                      {/* <button type='button' className="btn btn-secondary" onClick={() => { aceptarAlumno(alumno._id) }}> */}
-                      <button type='button' className="btn btn-secondary" onClick={(e) => { handleOpen(e, alumno) }}>
-                        Registrar metricas alumno
-                      </button>
-                    </div>
-                    <div className="card-body">
-                      <p>Rut: {alumno.rut}</p>
-                      <p>Correo: {alumno.correo}</p>
-                      <p>Carrera: {alumno.carrera}</p>
-                    </div>
-                    <div className="card-footer">
+                      <div className="card-header d-flex justify-content-between">
+                        <h3>{alumno.nombre}</h3>
+                        {/* <button type='button' className="btn btn-secondary" onClick={() => { aceptarAlumno(alumno._id) }}> */}
+                        <button type='button' className="btn btn-secondary" onClick={(e) => { handleOpen(e, alumno) }}>
+                          Registrar metricas alumno
+                        </button>
+                      </div>
+                      <div className="card-body">
+                        <p>Rut: {alumno.rut}</p>
+                        <p>Correo: {alumno.correo}</p>
+                        <p>Carrera: {alumno.carrera}</p>
+                      </div>
+                      <div className="card-footer">
 
+                      </div>
                     </div>
-                  </div>
-                  {open && <RegistroMetricas open={open} setOpen={setOpen} handleClose={handleClose} registrarMetricas={registrarMetricas} alumnoSeleccionado={alumnoSeleccionado}
-                  />
-                  }
-                </Card>
-              ))
-            }
+                    {open && <RegistroMetricas open={open} setOpen={setOpen} handleClose={handleClose} registrarMetricas={registrarMetricas} alumnoSeleccionado={alumnoSeleccionado}
+                    />
+                    }
+                  </Card>
+                ))
+              }
+            </TarjetaContainer>
           </Div>
 
           <ReactPaginate
@@ -241,6 +239,13 @@ const DivT = styled.div`
 const Div = styled.div`
   font-family: 'Kodchasan';
   top: 10px;
+`;
+
+const TarjetaContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 `;
 
 

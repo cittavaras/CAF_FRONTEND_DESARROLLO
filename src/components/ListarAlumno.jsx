@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import ReactPaginate from 'react-paginate';
 import MotivoRechazo from './MotivoRechazo';
+import BotonesPerfil from './BotonesPerfil';
 
 const ListarAlumno = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -10,15 +11,15 @@ const ListarAlumno = () => {
   const [porPagina, setPorPagina] = useState(6);
   const [totalCount, setTotalCount] = useState(0);
   const [alumnoEliminado, setAlumnoEliminado] = useState(null);
-  
+
 
   const [open, setOpen] = useState(false);
 
-  const handleOpen = (e, al) =>  {
+  const handleOpen = (e, al) => {
     e.preventDefault();
     setAlumnoEliminado(al)
     setOpen(true)
-   
+
   };
   const handleClose = () => {
     setAlumnoEliminado(null);
@@ -47,25 +48,25 @@ const ListarAlumno = () => {
       console.log(error);
     }
   }
-  
+
   // Función para eliminar un alumno
   const eliminarAlumno = async (e, message) => {
     e.preventDefault();
     const res = await axios.delete(`https://caf.ivaras.cl/api/alumnos/${alumnoEliminado._id}`);
 
     await axios
-    .post('https://caf.ivaras.cl/api/send-email', {
-      to: alumnoEliminado?.correo,
-      subject: 'Solicitud declinada CAF IVARAS',
-      text: `${alumnoEliminado?.nombre}, ${message} `,
-      html: `<strong>${alumnoEliminado?.nombre}</strong>, ${message}`,
-    })
-    .then((response) => {
-      console.log('Email sent successfully:', response.data);
-    })
-    .catch((error) => {
-      console.error('Error sending email:', error);
-    });
+      .post('https://caf.ivaras.cl/api/send-email', {
+        to: alumnoEliminado?.correo,
+        subject: 'Solicitud declinada CAF IVARAS',
+        text: `${alumnoEliminado?.nombre}, ${message} `,
+        html: `<strong>${alumnoEliminado?.nombre}</strong>, ${message}`,
+      })
+      .then((response) => {
+        console.log('Email sent successfully:', response.data);
+      })
+      .catch((error) => {
+        console.error('Error sending email:', error);
+      });
 
     handleClose();
     getAlumnos();
@@ -73,28 +74,28 @@ const ListarAlumno = () => {
   }
 
   // Función para aceptar un alumno
-  const aceptarAlumno = async (id) => {
-    const res = await axios.put(`https://caf.ivaras.cl/api/alumnos/${id}`, { active: true });
-    const {correo, nombre} = res.data;
+  const aceptarAlumno = async (alumno) => {
+    const res = await axios.put(`https://caf.ivaras.cl/api/alumnos/${alumno._id}`, { active: true });
     await axios
-    .post('https://caf.ivaras.cl/api/send-email', {
-      to: correo,
-      subject: 'Solicitud Aceptada CAF IVARAS',
-      text: `${nombre}, Le informamos que su cuenta ha sido activada exitosamente, recuerde que para ingresar necesita su correo y el rut como contraseña sin puntos, sin guion y sin digito verificador guiense por el siguiente link https://caf.ivaras.cl/login `,
-      html: `<strong>${nombre}</strong>, Le informamos que su cuenta ha sido activada exitosamente, recuerde que para ingresar necesita su correo y el rut como contraseña sin puntos, sin guion y sin digito verificador guiense por el siguiente link https://caf.ivaras.cl/login`,
-    })
-    .then((response) => {
-      console.log('Email sent successfully:', response.data);
-    })
-    .catch((error) => {
-      console.error('Error sending email:', error);
-    });
+      .post('https://caf.ivaras.cl/api/send-email', {
+        to: alumno.correo,
+        subject: 'Solicitud Aceptada CAF IVARAS',
+        text: `${alumno.nombre}, Le informamos que su cuenta ha sido activada exitosamente, recuerde que para ingresar necesita su correo y el rut como contraseña sin puntos, sin guion y sin digito verificador guiense por el siguiente link https://caf.ivaras.cl`,
+        html: `<strong>${alumno.nombre}</strong>, Le informamos que su cuenta ha sido activada exitosamente, recuerde que para ingresar necesita su correo y el rut como contraseña sin puntos, sin guion y sin digito verificador guiense por el siguiente link https://caf.ivaras.cl`,
+      })
+      .then((response) => {
+        console.log('Email sent successfully:', response.data);
+      })
+      .catch((error) => {
+        console.error('Error sending email:', error);
+      });
 
     console.log(res);
     console.log(res?.data);
-    
+
     getAlumnos();
   }
+
 
   // Función para manejar el cambio de página
   const handlePageClick = (e) => {
@@ -104,32 +105,35 @@ const ListarAlumno = () => {
   return (
     <>
       <DivT>
-        <Div className="row container-sm" >
-          {
-            alumnos.map(alumno => (
-              <Card className="col-md-4 p-2" key={alumno._id}>
-                <div className="card">
-                  <div className="card-header d-flex justify-content-between">
-                    <h3>{alumno.nombre}</h3>
-                    <button type='button' className="btn btn-secondary" onClick={() => { aceptarAlumno(alumno._id) }}>
-                      Aceptar Solicitud
-                    </button>
+      <BotonesPerfil/>
+        <Div className="row" >
+          <TarjetaContainer>
+            {
+              alumnos.map(alumno => (
+                <Card className="col-md-4 p-2" key={alumno._id}>
+                  <div className="card">
+                    <div className="card-header d-flex justify-content-between">
+                      <h3>{alumno.nombre}</h3>
+                      <button type='button' className="btn btn-secondary" onClick={() => { aceptarAlumno(alumno) }}>
+                        Aceptar Solicitud
+                      </button>
+                    </div>
+                    <div className="card-body">
+                      <p>Rut: {alumno.rut}</p>
+                      <p>Correo: {alumno.correo}</p>
+                      <p>Carrera: {alumno.carrera}</p>
+                    </div>
+                    <div className="card-footer">
+                      <button type="button" className="btn btn-danger" onClick={(e) => { handleOpen(e, alumno) }} >
+                        Eliminar
+                      </button>
+                    </div>
                   </div>
-                  <div className="card-body">
-                    <p>Rut: {alumno.rut}</p>
-                    <p>Correo: {alumno.correo}</p>
-                    <p>Carrera: {alumno.carrera}</p>
-                  </div>
-                  <div className="card-footer">
-                    <button type="button" className="btn btn-danger" onClick={(e) => { handleOpen(e, alumno) }} >
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-                  {open && <MotivoRechazo open={open} setOpen={setOpen} handleClose={handleClose}  alumnoEliminado={alumnoEliminado} eliminarAlumno={eliminarAlumno}/>}
-              </Card>
-            ))
-          }
+                  {open && <MotivoRechazo open={open} setOpen={setOpen} handleClose={handleClose} alumnoEliminado={alumnoEliminado} eliminarAlumno={eliminarAlumno} />}
+                </Card>
+              ))
+            }
+          </TarjetaContainer>
         </Div>
 
         <ReactPaginate
@@ -181,5 +185,13 @@ const Card = styled.div`
     margin: 10px 0; // Se quita el margen horizontal y se agrega un margen vertical
   }
 `;
+
+const TarjetaContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+`;
+
 
 export default ListarAlumno;

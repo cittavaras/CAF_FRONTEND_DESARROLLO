@@ -26,8 +26,7 @@ import routes from '../helpers/routes';
 import CrearUsuario from "../components/CrearUsuario";
 import ListarActivos from "../components/ListarActivos";
 import Configuracion from "../components/Configuracion";
-
-import Calendario from "../pages/calendario";
+import Calendariocm from "../pages/Calendariocm";
 
 
 export default function AppRouter() {
@@ -71,14 +70,13 @@ export default function AppRouter() {
               <Notificacion />
             </PublicRoute>}
           />
-          <Route path="/calendario" element={
+          <Route path="/calendariocm" element={
             <PublicRoute>
-              <Calendario />
+              <Calendariocm />
             </PublicRoute>}
-          /> 
+          />
 
           {/* Rutas privadas */}
-          {/* TODO: Arreglar esta ruta desde el admin y colocando la ruta desde el navegador no se deberia mostrar */}
           <Route path="/landing" element={
             <PrivateRoute >
               <LandingPageAlumno />

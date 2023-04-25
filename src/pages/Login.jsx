@@ -44,7 +44,10 @@ const Login = () => {
       console.log(res);
       try {
         const usuario = res?.data?.respAlumno
+
+        
         if (!!usuario && res.data.success) {
+          
           console.log('usuario', usuario);
           login(usuario);
           if (usuario.tipoUsuario === 'Admin') {
