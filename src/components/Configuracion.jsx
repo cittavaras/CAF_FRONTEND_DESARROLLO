@@ -65,7 +65,7 @@ const Configuracion = () => {
         return;
       }
 
-      await axios.put(`https://caf.ivaras.cl/api/alumnos/rut/${alumno.rut}`, newAlumno);
+      await axios.put(`https://caf-desarrollo.ivaras.cl/api/alumnos/rut/${alumno.rut}`, newAlumno);
       alert('Alumno actualizado')
       navigate('/landing')
     }
@@ -100,6 +100,7 @@ const Configuracion = () => {
                 <option value="Gastronomía internacional">Gastronomía internacional</option>
                 <option value="Ingeniería en administración">Ingeniería en administración</option>
                 <option value="Ingeniería en infraestructura">Ingeniería en infraestructura</option>
+                <option value="Ingeniería en informatica">Ingeniería en informatica</option>
                 <option value="Ingeniería en administración de recursos humanos">Ingeniería en administración de recursos humanos</option>
                 <option value="Ingeniería en marketing">Ingeniería en marketing</option>
                 <option value="Ingeniería en comercio exterior">Ingeniería en comercio exterior</option>

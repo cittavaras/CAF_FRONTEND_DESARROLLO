@@ -93,7 +93,7 @@ const ReservarSesion = (props) => {
     setLoading(true);
     setEventos([]);
     try {
-      const res = await axios.get('https://caf.ivaras.cl/api/sesiones', {
+      const res = await axios.get('https://caf-desarrollo.ivaras.cl/api/sesiones', {
         params: {
           fecha: fechaActual
         }
@@ -113,7 +113,7 @@ const ReservarSesion = (props) => {
         rut: alumno.rut,
         sesiones: selectedEvents,
       }
-      const res = await axios.post('https://caf.ivaras.cl/api/reservas', body);
+      const res = await axios.post('https://caf-desarrollo.ivaras.cl/api/reservas', body);
       console.log(res);
       alert('Sesiones Reservadas');
       props.handleClose();
@@ -246,7 +246,7 @@ const ReservarSesion = (props) => {
   const getAlumnosByNumeroSesion = async () => {
     try {
       console.log('selectedSesion', selectedSesion)
-      const res = await axios.get(`https://caf.ivaras.cl/api/sesiones/${selectedSesion.id}/alumnos`);
+      const res = await axios.get(`https://caf-desarrollo.ivaras.cl/api/sesiones/${selectedSesion.id}/alumnos`);
       setAlumnosSesion(res?.data ?? []);
       console.log('res', res);
     } catch (error) {

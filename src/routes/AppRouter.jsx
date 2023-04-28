@@ -70,11 +70,6 @@ export default function AppRouter() {
               <Notificacion />
             </PublicRoute>}
           />
-          <Route path="/calendariocm" element={
-            <PublicRoute>
-              <Calendariocm />
-            </PublicRoute>}
-          />
 
           {/* Rutas privadas */}
           <Route path="/landing" element={
