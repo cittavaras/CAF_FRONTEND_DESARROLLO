@@ -6,7 +6,8 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper
+    Paper,
+    Checkbox
 } from "@mui/material";
 
 const AlumnosSesion = ({ alumnosSesion = [] }) => {
@@ -14,6 +15,7 @@ const AlumnosSesion = ({ alumnosSesion = [] }) => {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
                 <TableRow>
+                    <TableCell/>
                     <TableCell>Nombre</TableCell>
                     <TableCell>Rut</TableCell>
                 </TableRow>
@@ -22,6 +24,12 @@ const AlumnosSesion = ({ alumnosSesion = [] }) => {
                 {
                     alumnosSesion.map(alumno => (
                         <TableRow>
+                            <TableCell padding="checkbox">
+                                <Checkbox
+                                    color="primary"
+                                    // checked={false}
+                                />
+                            </TableCell>
                             <TableCell>{alumno.nombre}</TableCell>
                             <TableCell>{alumno.rut}</TableCell>
                         </TableRow>

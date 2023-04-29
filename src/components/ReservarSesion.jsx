@@ -219,7 +219,7 @@ const ReservarSesion = (props) => {
       } else {
         alert(`¡Solo se permiten seleccionar hasta ${maxSelections} eventos!`);
       }
-    } else if (hasRole(roles.admin)) {
+    } else if (hasRole(roles.admin ) || hasRole(roles.instructor)){
       if (event.cantidadUsuarios <= 0) {
         alert('No se puede hacer clic en una sesión sin alumnos');
         return;
@@ -272,7 +272,7 @@ return (
           <CalendarTitle variant="h4" component="h2">{CALENDAR_TITLE}</CalendarTitle>
         </TitleContainer>
         <CalendarParagraph variant="body1" component="p">{CALENDAR_PARAGRAPH}</CalendarParagraph>
-          {hasRole(roles.admin) &&
+          {(hasRole(roles.admin ) || hasRole(roles.instructor)) &&
             <Stepper activeStep={activeStep} alternativeLabel>
               <Step>
                 <StepLabel>Selector</StepLabel>
