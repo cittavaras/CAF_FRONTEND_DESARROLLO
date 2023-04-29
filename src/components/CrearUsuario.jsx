@@ -107,7 +107,7 @@ const CrearUsuario = () => {
               <InputN type="text" placeholder="NOMBRE COMPLETO:" name="nombre" onChange={onChangeAlumno} />
             </div>
             <div className="form-group">
-              <InputR type="text" placeholder="RUT:" name="rut" pattern="^(\d{1,2}\.)?\d{3}\.\d{3}-[0-9kK]$" onBlur={formatearRut} onChange={onChangeAlumno} />
+              <InputR type="text" placeholder="RUT:" name="rut" value={rut} pattern="^(\d{1,2}\.)?\d{3}\.\d{3}-[0-9kK]$" onBlur={formatearRut} onChange={onChangeAlumno} />
               <InputCorreo type="mail" placeholder="CORREO DUOC:" name="correo" onChange={onChangeAlumno} />
             </div>
             <div className="form-group">

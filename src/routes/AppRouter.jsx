@@ -26,7 +26,6 @@ import routes from '../helpers/routes';
 import CrearUsuario from "../components/CrearUsuario";
 import ListarActivos from "../components/ListarActivos";
 import Configuracion from "../components/Configuracion";
-import Calendariocm from "../pages/Calendariocm";
 
 
 export default function AppRouter() {

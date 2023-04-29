@@ -31,19 +31,15 @@ moment.weekdays(true, 2)
 const localizer = momentLocalizer(moment);
 
 const messages = {
-  today: 'hoy',
-  next: 'siguiente',
-  previous: 'anterior',
+  today: 'Hoy',
+  next: 'Siguiente',
+  previous: 'Anterior',
 };
-
-
 
 const alumno_sesion = JSON.parse(sessionStorage.getItem("alumno_sesion"));
 
-
 const CALENDAR_TITLE = "Reserva tu Entrenamiento";
 const CALENDAR_PARAGRAPH = "Selecciona Mes y Día que deseas agendar para ver los bloques disponibles. Luego selecciona el bloque que deseas reservar. Recuerda que solo puedes reservar 3 bloques por semana.";
-
 
 const StyledDialogTitle = styled(DialogTitle)`
   margin-top: 5px;
@@ -68,11 +64,9 @@ const CalendarParagraph = styled(Typography)`
   margin-bottom: 24px;
 `;
 
-
 const ReservarSesion = (props) => {
 
   const theme = useTheme();
-
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { alumno, hasRole } = useAuth();
   const [selectedEvents, setSelectedEvents] = useState([]);
@@ -104,7 +98,6 @@ const ReservarSesion = (props) => {
     }
     setLoading(false);
   }
-
 
   const crearReservas = async (e) => {
     e.preventDefault();
@@ -194,7 +187,6 @@ const ReservarSesion = (props) => {
           </Button>
         )
       };
-
       };
 
   const handleEventClick = (event) => {
@@ -271,14 +263,10 @@ return (
             color: (theme) => theme.palette.grey[500],
           }}
         >
-
           <CloseIcon />
         </StyledIconButton>
       </StyledDialogTitle>
-
       <StyledDialogContent style={{ minWidth: '500px'}} theme={theme}>
-
-        
 
         <TitleContainer>
           <CalendarTitle variant="h4" component="h2">{CALENDAR_TITLE}</CalendarTitle>
@@ -341,7 +329,6 @@ return (
   );
 };
 
-
 const generateTrainingEvents = (sesiones = [], fechaActual) => {
   const newSesiones = sesiones.map(sesion => {
     let [hours, minutes] = sesion.horaIni.split(":");
@@ -361,7 +348,6 @@ const generateTrainingEvents = (sesiones = [], fechaActual) => {
   })
   return newSesiones;
 };
-
 
 const CustomCalendar = styled(Calendar)`
   .rbc-calendar {
@@ -436,7 +422,5 @@ const StyledDialogContent = styled(DialogContent)`
     overflow-x: auto;
   }
 `;
-
-
 
 export default withResizeDetector(ReservarSesion);
