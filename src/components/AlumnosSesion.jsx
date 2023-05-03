@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     Table,
     TableBody,
@@ -12,7 +12,6 @@ import {
 
 const AlumnosSesion = ({ alumnosSesion = [], setAlumnosSesion, tomarAsistencia }) => {
 
-    // Este es el manejador de eventos que se ejecuta cada vez que se marca o desmarca un checkbox
     async function handleAsistenciaChange(e, alumno, index) {
         await tomarAsistencia(alumno.reservaId, e.target.checked)
         console.log('alumno.reservaId', alumno.reservaId, 'e.target.checked', e.target.checked)
@@ -21,6 +20,10 @@ const AlumnosSesion = ({ alumnosSesion = [], setAlumnosSesion, tomarAsistencia }
         newAlumnosSesion[index].asistencia = e.target.checked;
         setAlumnosSesion(newAlumnosSesion);
     }
+
+    useEffect(() => {
+        console.log("AlumnosSesion actualizado");
+    }, [alumnosSesion]);
 
     return <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -34,7 +37,7 @@ const AlumnosSesion = ({ alumnosSesion = [], setAlumnosSesion, tomarAsistencia }
             <TableBody>
                 {
                     alumnosSesion.map((alumno, index) => (
-                        <TableRow key={index}>
+                        <TableRow key={alumno.reservaId}>
                             <TableCell padding="checkbox">
                                 <Checkbox
                                     color="primary"
@@ -45,9 +48,12 @@ const AlumnosSesion = ({ alumnosSesion = [], setAlumnosSesion, tomarAsistencia }
                             <TableCell>{alumno.nombre}</TableCell>
                             <TableCell>{alumno.rut}</TableCell>
                         </TableRow>
-                    ))}
+                    ))
+                }
+
             </TableBody>
         </Table>
     </TableContainer>
 }
+
 export default AlumnosSesion;

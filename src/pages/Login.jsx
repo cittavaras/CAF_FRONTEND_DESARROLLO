@@ -16,7 +16,8 @@ const Login = () => {
   const [contraseña, setContraseña] = useState('');
 
   const onChangeCorreo = (e) => {
-    setAlumno(e.target.value).toLowerCase();
+    setAlumno(e.target.value.toLowerCase());
+    console.log(alumno);
   }
 
   const onChangeConstraseña = (e) => {

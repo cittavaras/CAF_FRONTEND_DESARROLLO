@@ -69,6 +69,7 @@ const CrearAlumno = () => {
       alert('El correo debe ser de duoc');
       return;
     } else {
+      correo.toLowerCase();
       const newAlumno = {
         nombre,
         rut,
@@ -98,7 +99,7 @@ const CrearAlumno = () => {
       navigate('/notificacion');
     }
   };
-
+  
 
   const validarCorreoElectronico = (correo) => {
     const expresionRegular = /^[a-zA-Z0-9._%+-]+@(duocuc\.cl|profesor\.duoc\.cl|duoc\.cl)$/;

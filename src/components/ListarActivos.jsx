@@ -106,9 +106,18 @@ const ListarActivos = () => {
 
   }
 
+  const formatearRut = (e) => {
+    console.log(e.target.value)
+    const rutSinFormatear = e.target.value.replace(/\./g, "").replace("-", "");
+    const dv = rutSinFormatear.slice(-1);
+    const rutNum = rutSinFormatear.slice(0, -1);
+    const rutFormateado = rutNum.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "-" + dv;
+    setSearch(rutFormateado);
+  }
 
   const handleInputValue = (e) => {
-    setSearch(e.target.value);
+    
+    formatearRut(e);
   }
 
   // Filtrar por rut

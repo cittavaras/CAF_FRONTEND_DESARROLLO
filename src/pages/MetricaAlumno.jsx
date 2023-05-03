@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import BotonesPerfil from '../components/BotonesPerfil';
+import { LineChart, Line, ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar } from 'recharts';
 
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet"></link>
 
@@ -21,12 +22,38 @@ const Metrica = () => {
 
   const MetricasAlumno = async () => {
     // const datosSesion = sessionStorage.getItem("alumno_sesion");
-    const {rut} = JSON.parse(sessionStorage.getItem('alumno_sesion'));  
+    const { rut } = JSON.parse(sessionStorage.getItem('alumno_sesion'));
     const res = await axios.post('https://caf-desarrollo.ivaras.cl/api/metricas/alumno', { rut });
     console.log(res.data)
     const metricaAlumno = res.data;
     setMetricas(metricaAlumno);
   }
+
+  const dataGrafico = [
+    {
+      name: 'Edad', uv: metricas?.edad ?? 0, pv: 2400, amt: 2400,
+    },
+    {
+      name: 'Altura', uv: metricas?.altura ?? 0, pv: 1398, amt: 2210,
+    },
+    {
+      name: 'Peso corporal', uv: metricas?.peso ?? 0, pv: 9800, amt: 2290,
+    },
+    {
+      name: 'Porcentaje de grasa corporal', uv: metricas?.porcentajeGrasaCorporal ?? 0, pv: 3908, amt: 2000,
+    },
+    {
+      name: 'Porcentaje de músculo', uv: metricas?.porcentajeGrasaMuscular ?? 0, pv: 4800, amt: 2181,
+    },
+
+    {
+      name: 'Índice de masa corporal (IMC)', uv: metricas?.imc ?? 0, pv: 3800, amt: 2500,
+    },
+    {
+      name: 'Grasa visceral', uv: metricas?.grasaVisceral ?? 0, pv: 4300, amt: 2100,
+    },
+  ];
+
 
   // Datos de ejemplo
   const data = React.useMemo(
@@ -39,7 +66,7 @@ const Metrica = () => {
           { metrica: 'Porcentaje de grasa corporal', valor: `${metricas?.porcentajeGrasaCorporal ?? 'No registra métricas'}` },
           { metrica: 'Porcentaje de músculo', valor: `${metricas?.porcentajeGrasaMuscular ?? 'No registra métricas'}` },
           { metrica: 'Índice de masa corporal (IMC)', valor: `${metricas?.imc ?? 'No registra métricas'}` },
-          { metrica: 'Grasa visceral', valor: `${metricas?.grasaVisceral ?? 'No registra métricas'}`}
+          { metrica: 'Grasa visceral', valor: `${metricas?.grasaVisceral ?? 'No registra métricas'}` }
         ];
       } else {
         return [];
@@ -47,7 +74,7 @@ const Metrica = () => {
     },
     [metricas]
   );
-  
+
 
   const columns = React.useMemo(
     () => [{ Header: 'Métricas de seguimiento del alumno', accessor: 'metrica' },
@@ -95,7 +122,26 @@ const Metrica = () => {
           })}
         </tbody>
       </MetricaTable>
+      <ResponsiveContainer width={600} height={300}>
+      
+      <BarChart 
+        dataGrafico={dataGrafico}
+        width={500}
+        height={300}
+        margin={{
+          top: 5, right: 30, left: 20, bottom: 5,}}
+       >
+        <CartesianGrid strokeDasharray="4 1 2"/>
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip/>
+        <Legend/>
+        <Bar dataKey ="Edad" fill='#6b48ff'/>
+        <Bar dataKey ="Altura" fill='#1ee3cf'/>
+      </BarChart>
+    </ResponsiveContainer>
     </MetricaContainer>
+   
   );
 };
 

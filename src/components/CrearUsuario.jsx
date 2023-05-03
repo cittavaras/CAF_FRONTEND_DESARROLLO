@@ -37,7 +37,8 @@ const CrearUsuario = () => {
         setRut(value);
         break;
       case 'correo':
-        setCorreo(value);
+        const tolower = value.toLowerCase();
+        setCorreo(tolower);
         break;
       case 'carrera':
         setCarrera(value);
@@ -80,7 +81,8 @@ const CrearUsuario = () => {
   };
 
   const validarCorreoElectronico = (correo) => {
-    const expresionRegular = /^[a-zA-Z0-9._%+-]+@(duocuc\.cl|profesor\.duoc\.cl|duoc\.cl)$/;
+    const expresionRegular = /^[a-zA-Z0-9._%+-]+@(duocuc\.cl|Duocuc\.cl|duocUC\.cl| DuocUC\.cl|profesor\.duoc\.cl|Profesor\.Duoc\.cl|duoc\.cl|Duoc\.cl)$/i;
+
     return expresionRegular.test(correo);
   };
 
