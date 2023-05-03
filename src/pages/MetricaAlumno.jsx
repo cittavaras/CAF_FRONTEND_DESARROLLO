@@ -28,8 +28,6 @@ const Metrica = () => {
     setMetricas(metricaAlumno);
   }
 
-  
-
   // Datos de ejemplo
   const data = React.useMemo(
     () => {

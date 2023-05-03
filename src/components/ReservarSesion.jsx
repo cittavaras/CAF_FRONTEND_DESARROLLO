@@ -246,6 +246,16 @@ const ReservarSesion = (props) => {
     }
   }
 
+  const tomarAsistencia = async (reservaId, asistencia) =>{
+    try {
+      const res = await axios.put(`https://caf-desarrollo.ivaras.cl/api/sesiones/reserva/${reservaId}/asistencia`, {asistencia: asistencia});
+      alert('Asistencia guardada');
+      
+    } catch (error) {
+      console.log(error);
+  }
+}
+
 return (
   <Container maxWidth="lg"
   style={{ marginTop: '70px' }}
@@ -305,12 +315,8 @@ return (
           )}
           {activeStep === 1 && (
             <>
-              <AlumnosSesion alumnosSesion={alumnosSesion}/>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleBackClick}
-              >
+              <AlumnosSesion alumnosSesion={alumnosSesion} setAlumnosSesion={setAlumnosSesion} tomarAsistencia={tomarAsistencia}/>
+              <Button variant="contained" color="primary" onClick={handleBackClick}>
                 Regresar
               </Button>
             </>
@@ -337,7 +343,7 @@ const generateTrainingEvents = (sesiones = [], fechaActual) => {
     const end = moment(fechaActual).day(sesion.dia).set({ hours, minutes }).toDate();
     const newSesion = {
       id: sesion.numeroSesion,
-      title: `Entrenamiento ${sesion.numeroSesion} ${sesion?.count}/${sesion?.cantidadUsuarios}`,
+      title: `Entrenamiento \n${sesion.numeroSesion} \n${sesion?.count}/${sesion?.cantidadUsuarios}`,
       start,
       end,
       isValid: sesion.count < sesion.cantidadUsuarios,
