@@ -29,29 +29,22 @@ const Metrica = () => {
     setMetricas(metricaAlumno);
   }
 
+  const datas = [
+    { name: 'Byron', edad: 24, altura: 1.80 },
+    { name: 'Javier', edad: 23, altura: 1.70 },
+    { name: 'Cristian', edad: 22, altura: 1.60 },
+    { name: 'Jorge', edad: 21, altura: 1.50 },
+    { name: 'Javiera', edad: 20, altura: 1.40 },
+  ]
   const dataGrafico = [
-    {
-      name: 'Edad', uv: metricas?.edad ?? 0, pv: 2400, amt: 2400,
-    },
-    {
-      name: 'Altura', uv: metricas?.altura ?? 0, pv: 1398, amt: 2210,
-    },
-    {
-      name: 'Peso corporal', uv: metricas?.peso ?? 0, pv: 9800, amt: 2290,
-    },
-    {
-      name: 'Porcentaje de grasa corporal', uv: metricas?.porcentajeGrasaCorporal ?? 0, pv: 3908, amt: 2000,
-    },
-    {
-      name: 'Porcentaje de músculo', uv: metricas?.porcentajeGrasaMuscular ?? 0, pv: 4800, amt: 2181,
-    },
+    { name: 'Edad', uv: metricas?.edad ?? 0, pv: 2400, amt: 2400, },
+    { name: 'Altura', uv: metricas?.altura ?? 0, pv: 1398, amt: 2210, },
+    { name: 'Peso corporal', uv: metricas?.peso ?? 0, pv: 9800, amt: 2290, },
+    { name: 'Porcentaje de grasa corporal', uv: metricas?.porcentajeGrasaCorporal ?? 0, pv: 3908, amt: 2000, },
+    { name: 'Porcentaje de músculo', uv: metricas?.porcentajeGrasaMuscular ?? 0, pv: 4800, amt: 2181, },
 
-    {
-      name: 'Índice de masa corporal (IMC)', uv: metricas?.imc ?? 0, pv: 3800, amt: 2500,
-    },
-    {
-      name: 'Grasa visceral', uv: metricas?.grasaVisceral ?? 0, pv: 4300, amt: 2100,
-    },
+    { name: 'Índice de masa corporal (IMC)', uv: metricas?.imc ?? 0, pv: 3800, amt: 2500, },
+    { name: 'Grasa visceral', uv: metricas?.grasaVisceral ?? 0, pv: 4300, amt: 2100, },
   ];
 
 
@@ -91,7 +84,7 @@ const Metrica = () => {
 
   return (
     <MetricaContainer>
-      <BotonesPerfil/>
+      <BotonesPerfil />
       <MetricaTitle>Métricas de seguimiento del alumno</MetricaTitle>
       <MetricaTable {...getTableProps()}>
         <thead>
@@ -123,25 +116,26 @@ const Metrica = () => {
         </tbody>
       </MetricaTable>
       <ResponsiveContainer width={600} height={300}>
-      
-      <BarChart 
-        dataGrafico={dataGrafico}
-        width={500}
-        height={300}
-        margin={{
-          top: 5, right: 30, left: 20, bottom: 5,}}
-       >
-        <CartesianGrid strokeDasharray="4 1 2"/>
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip/>
-        <Legend/>
-        <Bar dataKey ="Edad" fill='#6b48ff'/>
-        <Bar dataKey ="Altura" fill='#1ee3cf'/>
-      </BarChart>
-    </ResponsiveContainer>
+
+        <BarChart
+          dataGrafico={datas}
+          width={500}
+          height={300}
+          margin={{
+            top: 5, right: 30, left: 20, bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="4 1 2" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="edad" fill='#6b48ff' />
+          <Bar dataKey="altura" fill='#1ee3cf' />
+        </BarChart>
+      </ResponsiveContainer>
     </MetricaContainer>
-   
+
   );
 };
 

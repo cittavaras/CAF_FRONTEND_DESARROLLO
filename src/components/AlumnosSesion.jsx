@@ -14,10 +14,8 @@ const AlumnosSesion = ({ alumnosSesion = [], setAlumnosSesion, tomarAsistencia }
 
     async function handleAsistenciaChange(e, alumno, index) {
         await tomarAsistencia(alumno.reservaId, e.target.checked)
-        console.log('alumno.reservaId', alumno.reservaId, 'e.target.checked', e.target.checked)
-        console.log('alumno', alumno)
         const newAlumnosSesion = [...alumnosSesion];
-        newAlumnosSesion[index].asistencia = e.target.checked;
+        newAlumnosSesion[index] = { ...alumno, asistencia: !alumno.asistencia };
         setAlumnosSesion(newAlumnosSesion);
     }
 
