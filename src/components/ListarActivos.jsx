@@ -33,8 +33,6 @@ const ListarActivos = () => {
     // setSelectedEvents([]);
   }
 
-
-
   useEffect(() => {
     getAlumnos();
   }, [paginaNumero]);
@@ -43,12 +41,9 @@ const ListarActivos = () => {
   const getAlumnos = async () => {
     try {
       const res = await axios.get('https://caf-desarrollo.ivaras.cl/api/alumnos');
-      // Filtrar los alumnos que son del tipo 'Alumno' y que no estén activos
       const alumnos = res.data.alumnos.filter(alumno => alumno.tipoUsuario === 'Alumno' && alumno.active === true);
       const startIndex = paginaNumero * porPagina;
-      // Seleccionar los alumnos de la página actual según el índice de inicio y la cantidad de elementos por página
       const alumnosSeleccionados = alumnos.slice(startIndex, startIndex + porPagina);
-      // Actualizar el estado con los alumnos seleccionados y el total de alumnos obtenidos
       setAlumnos(alumnosSeleccionados);
       setTotalCount(alumnos.length);
     } catch (error) {
@@ -59,8 +54,6 @@ const ListarActivos = () => {
   const actualizarAlumno = async (e) => {
     e.preventDefault();
     const res = await axios.get(`https://caf-desarrollo.ivaras.cl/api/alumnos/${search}`);
-    // const res = await axios.put(`https://caf-desarrollo.ivaras.cl/api/alumnos/${id}`, { active: true });
-    // const { correo, nombre } = res.data;
     await axios
       .post('https://caf-desarrollo.ivaras.cl/api/alumnos', { rut: search, })
       .then((response) => {
@@ -69,9 +62,6 @@ const ListarActivos = () => {
       .catch((error) => {
         console.error('Error sending email:', error);
       });
-
-    // console.log(res);
-    // console.log(res?.data);
 
     getAlumnos();
   }
@@ -95,7 +85,6 @@ const ListarActivos = () => {
       return;
     }
     else {
-      // const res = await axios.post(`https://caf-desarrollo.ivaras.cl/api/alumnos/${alumnoSeleccionado._id}`);
       await axios.post(`https://caf-desarrollo.ivaras.cl/api/metricas/`, metricas);
       console.log(metricas);
       alert('Metricas registradas');

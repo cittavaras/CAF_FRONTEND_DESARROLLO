@@ -3,6 +3,8 @@ import axios from 'axios';
 import styled from "styled-components";
 import { useNavigate, Link } from 'react-router-dom';
 import useAuth from '../auth/useAuth';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import Chip from '@mui/material/Chip';
 
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet"></link>
 
@@ -88,13 +90,15 @@ const Login = () => {
           <Login0 className='login0'>
             <Form className='form-horizontal  d-flex  flex-column '>
               <Title>INICIAR SESIÓN</Title>
-              {/* <Input type="text" placeholder="CORREO DUOC:" value={alumno} onChange={onChangeCorreo} /> */}
               <InputCorreo type="mail" placeholder="CORREO DUOC:" name="correo" value={alumno} onChange={onChangeCorreo} />
-              {/* <Input type="password" placeholder="CONTRASEÑA:" value={contraseña} onChange={onChangeConstraseña} /> */}
               <InputPass type="password" placeholder="CONTRASEÑA" name="contraseña" value={contraseña} onChange={onChangeConstraseña} />
               <Button onClick={validacion}>INICIAR SESIÓN</Button>
               <div style={{ textAlign: 'center', marginTop: '20px' }}>
                 <Link to="/registro" style={{ borderBottom: '1px solid #FFF', color: '#FFF', textDecoration: 'none' }}>¿No tienes cuenta? Puedes crearte una aquí</Link></div>
+                <div style={{ color: '#FFF', textDecoration: 'none' }}>Creado por: </div>
+                <Chip color="primary" avatar={<LinkedInIcon>J</LinkedInIcon>} label="Javier Diaz Iturra" onClick={() => navigate('https://www.linkedin.com/in/javierdiaziturra/')}/>
+                <br />
+                <Chip color="primary" avatar={<LinkedInIcon>J</LinkedInIcon>} label="Byron Gonzalez" onClick={() => navigate('https://www.linkedin.com/in/byron-gonzalez-oyarce/')}/>
             </Form>
           </Login0>
         </Wrapper>

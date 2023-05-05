@@ -93,6 +93,7 @@ const ReservarSesion = (props) => {
         }
       });
       setSesiones(res?.data ?? []);
+      console.log("res?.data", res?.data);
     } catch (error) {
       console.log(error);
     }
@@ -105,6 +106,7 @@ const ReservarSesion = (props) => {
       const body = {
         rut: alumno.rut,
         sesiones: selectedEvents,
+        fecha: fechaActual
       }
       const res = await axios.post('https://caf-desarrollo.ivaras.cl/api/reservas', body);
       console.log(res);
@@ -237,14 +239,12 @@ const ReservarSesion = (props) => {
 
   const getAlumnosByNumeroSesion = async () => {
     try {
-      console.log('fechaActual', fechaActual)
       const res = await axios.get(`https://caf-desarrollo.ivaras.cl/api/sesiones/${selectedSesion.id}/alumnos`, {
         params: {
           fecha: fechaActual
         }
       });
       setAlumnosSesion(res?.data ?? []);
-      console.log('res', res);
     } catch (error) {
       console.log(error);
     }
@@ -319,9 +319,15 @@ return (
           {activeStep === 1 && (
             <>
               <AlumnosSesion alumnosSesion={alumnosSesion} setAlumnosSesion={setAlumnosSesion} tomarAsistencia={tomarAsistencia}/>
+               <div className='d-flex  justify-content-between'>
               <Button variant="contained" color="primary" onClick={handleBackClick}>
                 Regresar
               </Button>
+
+              <button variant="contained" className="btn btn-success " onClick={handleBackClick}>
+                Guardar asistencia
+              </button>
+              </div>
             </>
           )}
         </StyledDialogContent>

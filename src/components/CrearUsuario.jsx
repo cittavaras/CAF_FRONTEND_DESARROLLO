@@ -177,20 +177,8 @@ const CrearUsuario = () => {
 const OuterContainer = styled.div`
   display: flex;
   margin-top: 70px;
-/*   justify-content: center; */
-/*   align-items: center; */
-/*   height: 100vh; */
-/*   border-style: solid;
-  border-width: 2px; */
 `;
 
-/* const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: bottom;
-  align-items: center;
-  align-items: left;
-`; */
 
 const Container = styled.div`
   display: flex;
@@ -200,7 +188,6 @@ const Container = styled.div`
   padding: 20px;
   border-radius: 5px;
   opacity: 0.9;
-  /* padding-right: 100px; */
 `;
 
 const Login = styled.div`

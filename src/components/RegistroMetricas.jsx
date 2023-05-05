@@ -12,18 +12,6 @@ const RegistroMetricas = (props) => {
   const [peso, setPeso] = useState("");
   const [porcentajeGrasaMuscular, setPorcentajeGrasaMuscular] = useState("");
 
-
-
-  // let metricas = {};
-  // metricas.rut = props?.alumnoSeleccionado?.rut;
-  // metricas.edad = edad;
-  // metricas.imc = imc;
-  // metricas.grasaVisceral = grasaVisceral;
-  // metricas.altura = altura;
-  // metricas.porcentajeGrasaCorporal = porcentajeGrasaCorporal;
-  // metricas.peso = peso;
-  // metricas.porcentajeGrasaMuscular = porcentajeGrasaMuscular;
-
   let metricas = {
     edad,
     imc,

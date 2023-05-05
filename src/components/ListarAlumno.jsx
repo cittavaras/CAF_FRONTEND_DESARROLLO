@@ -36,12 +36,9 @@ const ListarAlumno = () => {
   const getAlumnos = async () => {
     try {
       const res = await axios.get('https://caf-desarrollo.ivaras.cl/api/alumnos');
-      // Filtrar los alumnos que son del tipo 'Alumno' y que no estén activos
       const alumnos = res.data.alumnos.filter(alumno => alumno.tipoUsuario === 'Alumno' && alumno.active === false);
       const startIndex = paginaNumero * porPagina;
-      // Seleccionar los alumnos de la página actual según el índice de inicio y la cantidad de elementos por página
       const alumnosSeleccionados = alumnos.slice(startIndex, startIndex + porPagina);
-      // Actualizar el estado con los alumnos seleccionados y el total de alumnos obtenidos
       setAlumnos(alumnosSeleccionados);
       setTotalCount(alumnos.length);
     } catch (error) {
@@ -96,12 +93,11 @@ const ListarAlumno = () => {
     getAlumnos();
   }
 
-
-  // Función para manejar el cambio de página
   const handlePageClick = (e) => {
-    const paginaSeleccionada = e.selected; // Página seleccionada
+    const paginaSeleccionada = e.selected;
     setPaginaNumero(paginaSeleccionada);
-  }; // fin de handlePageClick
+  };
+  
   return (
     <>
       <DivT>
