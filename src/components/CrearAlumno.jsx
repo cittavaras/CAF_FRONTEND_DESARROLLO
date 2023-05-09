@@ -80,7 +80,8 @@ const CrearAlumno = () => {
         tipoUsuario,
       };
 
-      await axios.post('https://caf-desarrollo.ivaras.cl/api/alumnos', newAlumno);
+      const res = await axios.post('https://caf-desarrollo.ivaras.cl/api/alumnos', newAlumno);
+      console.log(res);
 
       await axios
         .post('https://caf-desarrollo.ivaras.cl/api/send-email', {
