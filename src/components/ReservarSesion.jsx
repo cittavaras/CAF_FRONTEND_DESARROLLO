@@ -33,6 +33,8 @@ const messages = {
   today: 'Hoy',
   next: 'Siguiente',
   previous: 'Anterior',
+  week: 'Semana',
+  day: 'Día'
 };
 
 const alumno_sesion = JSON.parse(sessionStorage.getItem("alumno_sesion"));
@@ -67,6 +69,7 @@ const ReservarSesion = (props) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  //const [views, setViews] = useState([isMobile? ["day"]: ["week", "day"]);
   const { alumno, hasRole } = useAuth();
   const [selectedEvents, setSelectedEvents] = useState([]);
   const [sesiones, setSesiones] = useState([]);
@@ -338,10 +341,8 @@ const ReservarSesion = (props) => {
               events={eventos}
               startAccessor="start"
               endAccessor="end"
-              defaultView="week"
-              /*defaultView="day"
-              views={["day"]}*/
-              views={["week"]}
+              defaultView={isMobile? "day": "week"}
+              views={["week", "day"]}
               selectable={false}
               onSelectEvent={handleEventClick}
               eventPropGetter={eventStyleGetter}
